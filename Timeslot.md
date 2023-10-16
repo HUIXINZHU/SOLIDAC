@@ -23,4 +23,16 @@
 - Thinking about how to write a simple function to interpret instructions. (30mins)
 ### 10\06
 - Learning how to build a simple interpreter in https://ruslanspivak.com/lsbasi-part2/ (2 hours)
+### 10\09
+- Starting implement order code (1 hour)
+### 10\10
+- Finished first two orders.start from B-reg to store. (1 hour)
+- Asked supervisor about how do the switches and indicator lights work, and thinking about how to link all the methods to the interface after implementing them (1 hour)
+### 10\11
+- Received advice from the supervisor, realized that the initial code implementation has made things a bit too complicated, and planning to redesign the implementation. It may be possible to use actual numbers directly instead of simulating a run. (1.5 hours)
+### 10\15
+- Starting rewrite the implementation code(2 hours)
+### 10\16
+- Keep on implementing order code (1.5 hour)
+
 
