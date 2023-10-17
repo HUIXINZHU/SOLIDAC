@@ -22,3 +22,9 @@ The proposed approach involves writing a function to interpret instructions, wit
 For example, Instruction {f = 1; b = 3; s = 100} is interpreted as memory[100] = b[3].
 
 The goal is to create a JavaScript prototype for this computer system modeling, with an emphasis on implementing the specified instructions. 
+
+
+## 10\11\2023
+Reviewed the code logic, and there don't appear to be any obvious issues. Also, set up the tasks to be completed next week on GitHub: 
+- Writing some unit tests to verify the completed code
+- Finished implementing order code.
