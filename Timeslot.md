@@ -33,6 +33,7 @@
 ### 10\15
 - Starting rewrite the implementation code(2 hours)
 ### 10\16
-- Keep on implementing order code (1.5 hour)
-
+- Keep on implementing order code (1.5 hours)
+### 10\17
+- Finised implementing order code (2 hours)
 
