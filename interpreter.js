@@ -105,7 +105,7 @@ class MachineWord {
       this.registers={
         b:Array.from({length:8},()=>new MachineWord(11)), //B-Registers        
         c:new MachineWord(21), //The control register
-        d:new MachineWord(21), //The multiplier/quptient register
+        d:new MachineWord(21), //The multiplier/quptient register      
         i:new MachineWord(21), //The inspection register
 
         m:new MachineWord(21), //The double-length accumulator,high half
@@ -113,48 +113,41 @@ class MachineWord {
       }
       this.store=Array.from({length:512},()=>new MachineWord(20,false));
     }
-  }
-  // Define the machine state as an object
-  let machineState = {
-    a: MachineWord(21),
-    b: [MachineWord(11), MachineWord(11), MachineWord(11), MachineWord(11), MachineWord(11), MachineWord(11), MachineWord(11)],
-    c: MachineWord(21),
-    d: MachineWord(21),
-    l: MachineWord(21),
-    m: MachineWord(21),
-    s: Array.from({length: 100}, () => MachineWord(21))
-  };
-  
-  // Define the shape of an instruction
-  class Instruction {
-    constructor(f, b, n) {
-      this.f = f; // Opcode
-      this.b = b; // Register b
-      this.n = n; // Constant value n
+    executeOrder(order){
+      const{f,b,n}=order;
+
+      switch(f){
+        case 1:
+          this.store[n].assign(this.registers.b[b]);
+          break;
+        case 2:
+          this.registers.b[b].assign(this.store[n]);
+          break;
+        case 3:
+          this.registers.b[b].subtract(this.store[n]);
+          break;
+        case 4:
+          this.registers.b[b].subtract(this.store[n]);
+          break;
+        case 5:
+          this.registers.b[b].assign({number:n,size:11});
+          break;
+        case 6:
+          this.registers.b[b].add({toNumber:()=>n});
+          break;
+        case 7:
+          this.registers.b[b].subtract({toNumber:()=>n});
+          break;
+        case 8:
+          this.registers.b[b].and({number:n,size:11});
+          break;
+        case 9:
+          this.store[n].swap(this.registers.b[b]);
+          break;
+        default:
+          //Stop
+          break;
+              
+      }
     }
   }
-  
-  // Function to interpret instructions
-  function interpretInstruction(instruction) {
-    const { f, b, n } = instruction;
-  
-    switch (f) {
-      case 1:
-        // Store register b to memory[s]
-        machineState.s[n].assign(machineState.b[b]);
-        break;
-      case 2:
-        // Load from memory[s] to register b
-        machineState.b[b].assign(machineState.s[n]);
-        break;
-      // More orders waiting for implementation
-      default:
-        console.error("Invalid order: ", f);
-    }
-  }
-  
-  // Example instruction
-  const instruction = new Instruction(1, 3, 10);
-  
-  // Interpret the instruction
-  interpretInstruction(instruction);
