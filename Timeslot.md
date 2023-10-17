@@ -34,3 +34,8 @@
 - Starting rewrite the implementation code(2 hours)
 ### 10\16
 - Keep on implementing order code (1.5 hour)
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 8a6536e119c10819bf28f76a737c69ae92d1fb53
