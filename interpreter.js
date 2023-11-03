@@ -34,6 +34,7 @@ class MachineWord {
           return this.number | (((~0)>>>(this.size-i-1))<<(this.size-i-1));
         }
         else{
+	  // @jsinger - check this calculation - it might be wrong    
           return(this.number<<(discardedDigits+i))>>>(this.hasSignDigit+i);
         }
       }
@@ -151,3 +152,5 @@ class MachineWord {
       }
     }
   }
+
+module.exports = { MachineWord, Order, SOLIDAC };
