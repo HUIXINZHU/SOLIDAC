@@ -12,7 +12,7 @@ class MachineWord {
 
       this.limitSize();
 
-      this.mumber = ((this.number>>>movableDigits)<<movableDigits)|(other.number<<discardedDigits)>>>discardedDigits;
+      this.number = ((this.number>>>movableDigits)<<movableDigits)|(other.number<<discardedDigits)>>>discardedDigits;
 
       this.limitSize();
 
@@ -59,7 +59,7 @@ class MachineWord {
 
       this.limitSize();
 
-      //Negative as a restult of substratcion, not over flow
+      //Negative as a restult of subtratcion, not over flow
       if(negative&&this.hasSignDigit){
         let i=1;
 
