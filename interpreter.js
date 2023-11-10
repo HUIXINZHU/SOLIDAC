@@ -35,7 +35,8 @@ class MachineWord {
         }
         else{
 	  // @jsinger - check this calculation - it might be wrong    
-          return(this.number<<(discardedDigits+i))>>>(this.hasSignDigit+i);
+    //fixed
+          return(this.number<<(discardedDigits+i))>>>(discardedDigits+i);
         }
       }
       else{
