@@ -146,60 +146,75 @@
   background-color: hsl(25, 100%, 50%); 
 }
 
-.button-switch-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1px; 
-}
-
-.dial-container {
-  position: absolute;
-  top: 2px; 
-  left: 8px; 
-  width: 150px; 
-  height: 150px;
-  border-radius: 50%;
-  box-shadow: 2px 2px 3px #201f1f, inset 2px 2px 3px #888, inset -2px -2px 3px #ffd,
+.rotary-panel {
+    position: absolute;
+    top: 2px; 
+    left: 8px; 
+    width: 150px; 
+    height: 150px;
+    border-radius: 50%;
+    box-shadow: 2px 2px 3px #201f1f, inset 2px 2px 3px #888, inset -2px -2px 3px #ffd,
                 inset 2px -2px 3px #ffd, inset -2px 2px 3px #ffd, -2px -2px 3px #ffd,
                 2px -2px 3px #ffd, -2px 2px 3px #ffd;
-  border: 1px solid rgb(57, 57, 47);
-  z-index: 1;
+    border: 1px solid rgb(57, 57, 47);
+    z-index: 1;
+}
+
+.dial {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 50%;
+    background: #fdaa05;
+    transition: transform 1s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.number {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    background-color: #f9ec56;
+    border: 1px solid #000;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 10px;
+    cursor: pointer;
+    /* Additional styling and positioning for each number */
 }
 
 .dial-inner {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  position: absolute;
-  top: 3.5px;
-  left: 4px;
-  border-radius: 50%;
-  box-shadow: 2px 2px 3px #201f1f, inset 2px 2px 3px #888, inset -2px -2px 3px #ffd,
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    position: absolute;
+    top: 3.5px;
+    left: 4px;
+    box-shadow: 2px 2px 3px #201f1f, inset 2px 2px 3px #888, inset -2px -2px 3px #ffd,
                 inset 2px -2px 3px #ffd, inset -2px 2px 3px #ffd, -2px -2px 3px #ffd,
                 2px -2px 3px #ffd, -2px 2px 3px #ffd;
-  border: 1px solid rgb(57, 57, 47);
+    border: 1px solid rgb(57, 57, 47);
 }
 
-.dial-center{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width:55px;
-  height:20px;
-  padding-top: 40px;
-  background-color: rgb(251, 251, 251);
-  border-radius: 50%;
-  box-shadow: -2px -2px 3px #888, 2px 2px 3px #888, -2px 2px 3px #888,
-  2px -2px 3px #888;
-  overflow: hidden;
-  text-align: center;
-}
-
-.span{
-  display: block;
-  font-size: 5px;
+.dial-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 55px;
+    height: 20px;
+    padding-top: 40px;
+    background-color: rgb(251, 251, 251);
+    border-radius: 50%;
+    box-shadow: -2px -2px 3px #888, 2px 2px 3px #888, -2px 2px 3px #888,
+    2px -2px 3px #888;
+    overflow: hidden;
+    text-align: center;
 }
 
 .center-bottom {
@@ -215,43 +230,19 @@
     border-radius: 10% 10%  5% 10%; 
 }
 
-.dial.rotatable {
-  background-color: transparent;
-  z-index: 2;
-  transition: transform 2s ease;
-}
 
-.number {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: #fff;
-  border: 1px solid #000;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 20px;
-  font-size: 10px;
-  user-select: none;
-  cursor: pointer;
-}
-
-.number {
-    position: absolute;
-    top: 65px;
-    left: 74px;
-    transform: translate(-90%, 210%);
-  }
-  .number:nth-child(0) { transform: translate(-30%, -50%)  }
-  .number:nth-child(1) { transform: translate(-270%, -25%) ; }
-  .number:nth-child(2) { transform: translate(-235%, -140%) ; }
-  .number:nth-child(3) { transform: translate(-140%, -220%); }
-  .number:nth-child(4) { transform: translate(-25%, -235%); }
-  .number:nth-child(5) { transform: translate(90%, -195%); }
-  .number:nth-child(6) { transform: translate(170%, -105%); }
-  .number:nth-child(7) { transform: translate(190%, 20%); }
-  .number:nth-child(8) { transform: translate(140%, 135%); }
-  .number:nth-child(9) { transform: translate(30%, 200%); }
-  
+        /* Example positions for two numbers */
+        .number[data-number="1"] { top: 35%; left: 10%; }
+        .number[data-number="2"] { top: 20%; left: 20%; }
+        .number[data-number="3"] { top: 10%; left: 35%; }
+        .number[data-number="4"] { top: 10%; left: 52%; }
+        .number[data-number="5"] { top: 18%; left: 67%; }
+        .number[data-number="6"] { top: 33%; left: 74%; }
+        .number[data-number="7"] { top: 50%; left: 74%; }
+        .number[data-number="8"] { top: 65%; left: 65%; }
+        .number[data-number="9"] { top: 75%; left: 52%; }
+        .number[data-number="0"] { top: 74%; left: 36%; }
+        /* Add more positions for other numbers */
 
 
   .right {
@@ -299,31 +290,36 @@ background-color: hsl(245, 39%, 49%);
       </div>
     </div>
     <div class="rectangle middle" id="switchesContainer"> 
-      <div class="dial-container">
+      <div class="rotary-panel">
         <div class="dial-inner"></div>
         <div class="dial-center"></div>
-        <div class="span"></div>
         <div class="center-bottom"></div>
-        <div class="stop"></div>
-        <div class="dial rotatable" id="rotatable-dial">
-          <div class="number" id="nth-child0">1</div>
-          <div class="number" id="nth-child1">2</div>
-          <div class="number" id="nth-child2">3</div>
-          <div class="number" id="nth-child3">4</div>
-          <div class="number" id="nth-child4">5</div>
-          <div class="number" id="nth-child5">6</div>
-          <div class="number" id="nth-child6">7</div>
-          <div class="number" id="nth-child7">8</div>
-          <div class="number" id="nth-child8">9</div>
-          <div class="number" id="nth-child9">0</div>
-        </div>    
+            <!-- 示例数字 -->
+        <div class="dial">
+            <div class="dial-inner"></div>
+            <div class="dial-center"></div>
+            <!-- 示例数字 -->
+            <div class="number" data-number="1">1</div>
+            <div class="number" data-number="2">2</div>
+            <div class="number" data-number="3">3</div>
+            <div class="number" data-number="4">4</div>
+            <div class="number" data-number="5">5</div>
+            <div class="number" data-number="6">6</div>
+            <div class="number" data-number="7">7</div>
+            <div class="number" data-number="8">8</div>
+            <div class="number" data-number="9">9</div>
+            <div class="number" data-number="0">0</div>
+            <!-- Add more numbers as needed -->
+            <!-- Add more numbers as needed -->
+        </div>
       </div>  
     </div>
     <div class="rectangle small" id="gridContainer"></div>
   </div>  
 </div>
 <script>
-  
+
+
   document.addEventListener('DOMContentLoaded', (event) => {
     const switchesContainer = document.getElementById('switchesContainer');
     
@@ -362,6 +358,34 @@ background-color: hsl(245, 39%, 49%);
     }
   });
   
+  const numberAngles = {
+            "1": 130,    // 1 的位置为 0 度
+            "2": 160,   // 2 的位置为 36 度
+            "3": 190,   // 以此类推
+            "4": 220,
+            "5": 250,
+            "6": 280,
+            "7": 310,
+            "8": 340,
+            "9": 370,
+            "0": 400,
+        };
+    
+        document.querySelectorAll('.number').forEach(number => {
+            number.addEventListener('click', function() {
+                rotateDialToNumber(this.dataset.number);
+            });
+        });
+    
+        function rotateDialToNumber(number) {
+            const targetAngle = numberAngles[number];
+            const dial = document.querySelector('.dial');
+            dial.style.transform = `rotate(-${targetAngle}deg)`;
+            setTimeout(() => {
+        dial.style.transform = 'rotate(0deg)';
+    }, 2000);
+        }
+
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const gridContainer = document.getElementById('gridContainer');
@@ -405,18 +429,46 @@ function updateClock() {
 updateClock(); 
 setInterval(updateClock, 1000); 
 
-const numbers = document.querySelectorAll('.number');
-const dial = document.getElementById('dial rotatable');
-numbers.onclick = function () {
-  dial.style.transform = "translate(-50%, -50%) rotate(-133deg)";
+const numbers = document.querySelectorAll('.numbers');
+const dial = document.getElementById('.dial-container');
+numbers[0].onclick = function () {
+  dial.style.transform = "rotate(-133deg)";
   dial.style.transitionDuration = "0.5s";
-  setTimeout(closeNumber0, 500);
+  setTimeout(closeNumbers0, 500);
 };
-function closeNumbers() {
-  dial.style.transform = "translate(-270%, -25%) rotate(0deg)";
+function closeNumbers0() {
+  dial.style.transform = "rotate(0deg)";
   dial.style.transitionDuration = "1.5s";
   dial.style.transitionTimingFunction = "linear";
 }
+
+const numbersAngles = {
+            "1": 180,    // 1 的位置为 0 度
+            "2": 200,   // 2 的位置为 36 度
+            "3": 250,   // 以此类推
+            "4": 450,
+            "5": 144,
+            "6": 180,
+            "7": 216,
+            "8": 252,
+            "9": 288,
+            "0": 324
+        };
+        document.querySelectorAll('.numbers').forEach(numbers => {
+            numbers.addEventListener('click', function() {
+                rotateDialToNumber(this.dataset.numbers);
+            });
+        });
+    
+        function rotateDialToNumber(numbers) {
+            const targetAngle = numberAngles[numbers];
+            const dial = document.querySelector('.dial');
+            dial.style.transform = `rotate(-${targetAngle}deg)`;
+            setTimeout(() => {
+        dial.style.transform = 'rotate(0deg)';
+    }, 2000);
+        }
+
 </script>
 
 </body>
