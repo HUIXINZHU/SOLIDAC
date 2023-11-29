@@ -419,45 +419,6 @@ function updateClock() {
 updateClock(); 
 setInterval(updateClock, 1000); 
 
-const numbers = document.querySelectorAll('.numbers');
-const dial = document.getElementById('.dial-container');
-numbers[0].onclick = function () {
-  dial.style.transform = "rotate(-133deg)";
-  dial.style.transitionDuration = "0.5s";
-  setTimeout(closeNumbers0, 500);
-};
-function closeNumbers0() {
-  dial.style.transform = "rotate(0deg)";
-  dial.style.transitionDuration = "1.5s";
-  dial.style.transitionTimingFunction = "linear";
-}
-
-const numbersAngles = {
-            "1": 180,    
-            "2": 200,   
-            "3": 250,   
-            "4": 450,
-            "5": 144,
-            "6": 180,
-            "7": 216,
-            "8": 252,
-            "9": 288,
-            "0": 324
-        };
-        document.querySelectorAll('.numbers').forEach(numbers => {
-            numbers.addEventListener('click', function() {
-                rotateDialToNumber(this.dataset.numbers);
-            });
-        });
-    
-        function rotateDialToNumber(numbers) {
-            const targetAngle = numberAngles[numbers];
-            const dial = document.querySelector('.dial');
-            dial.style.transform = `rotate(-${targetAngle}deg)`;
-            setTimeout(() => {
-        dial.style.transform = 'rotate(0deg)';
-    }, 2000);
-        }
 
 </script>
 
