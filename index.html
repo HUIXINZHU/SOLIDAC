@@ -117,6 +117,10 @@
   border: 2px solid #000000;
 }
 
+.light[data-lit] {
+  background-color: greenyellow;
+}
+
 .switch {
     width: 14px; 
     height: 30px; 
@@ -171,6 +175,11 @@
   border-radius: 50%;
   border: 1px solid #000000;
   }
+
+.register-light[data-lit] {
+  background-color: yellow;
+  }
+
 .button-container {
   position: absolute;
   right: 50px;
@@ -471,8 +480,40 @@ background-color: hsl(245, 39%, 49%);
     <div class="rectangle small" id="gridContainer"></div>
   </div>  
 </div>
+<script src="interpreter.js"></script>
 <script>
 
+let bRegisterShown = 0;
+let cRegisterShown = 0;
+
+function updateBregisterLights() {
+  const topLightsVal = solidac.registers.b[bRegisterShown].number;
+  for (let i = 1; i <= 11; i++) {
+    if ((topLightsVal >>> (i - 1)) & 1) {
+      document.getElementById(`register-light-${12 - i}`).setAttribute('data-lit', 'true');
+    } else {
+      document.getElementById(`register-light-${12 - i}`).removeAttribute('data-lit');
+    }
+  }
+}
+
+function updateCregisterLights() {
+  const regName = {0: 'c', 1: 'd', 2: 'i', 3: 'm'}[cRegisterShown];
+  const middleLightsVal = solidac.registers[regName].number;
+  for (let i = 1; i <= 20; i++) {
+    if ((middleLightsVal >>> (i - 1)) & 1) {
+      document.getElementById(`light-${21 - i}`).setAttribute('data-lit', 'true');
+    } else {
+      document.getElementById(`light-${21 - i}`).removeAttribute('data-lit');
+    }
+  }
+}
+
+let solidac = new SOLIDAC();
+solidac.setPostOrderHook(function () {
+  updateBregisterLights();
+  updateCregisterLights();
+});
 
 document.addEventListener('DOMContentLoaded', function () {
        const lightsContainer = document.querySelector('.lights');
@@ -483,6 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
        for (let i = 1; i <= 20; i++) {
 
           const light = document.createElement('div');
+          light.id = `light-${i}`;
           light.className = 'light';
           lightsContainer.appendChild(light);
 
@@ -518,6 +560,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     for (let i = 1; i <= 11; i++) {
     const light = document.createElement('div');
+    light.id = `register-light-${i}`;
                 light.className = 'register-light';
                 lightsContainer.appendChild(light);
     }
@@ -530,6 +573,8 @@ document.addEventListener('DOMContentLoaded', function () {
   rotateButton.addEventListener('click', function () {
     angle += 45; 
     rotateButton.style.transform = `rotate(${angle}deg)`;
+    bRegisterShown = (bRegisterShown + 1) % 8;
+    updateBregisterLights();
   });
 });
 
@@ -540,6 +585,8 @@ document.addEventListener('DOMContentLoaded', function () {
   rotateButton2.addEventListener('click', function () {
     angle += 45; 
     rotateButton2.style.transform = `rotate(${angle}deg)`;
+    cRegisterShown = (cRegisterShown + 1) % 4;
+    updateCregisterLights();
   });
 });
 
