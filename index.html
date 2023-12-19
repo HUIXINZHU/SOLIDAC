@@ -17,24 +17,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center; 
-  width: 900px; 
-  height: 300px; 
-  border: 2px solid #000000; 
-  padding: 10px; 
+  width: 1200px; 
+  height: 400px; 
+  border: 4px solid #000000; 
+  padding: 30px; 
+  background-color: #aaa9a9;
  }
 
 
 .rectangle.small {
-  width: 220px; 
-  height: 200px;
-  border: 2px solid #000000; 
-  background-color: #ffffff; 
+  width: 280px; 
+  height: 250px;
+  border: 4px solid #000000; 
+  background-color: #bbaeae; 
 }
 .rectangle.middle {
-  width: 400px; 
-  height: 200px; 
-  border: 2px solid #000000; 
-  background-color: #ffffff;
+  width: 570px; 
+  height: 350px; 
+  border: 4px solid #000000; 
+  background-color: #b6a8a8;
   position: relative;
 }
 
@@ -46,11 +47,11 @@
   position: absolute; 
   top: 50%; 
   left: 50%; 
-  width: 150px; 
-  height: 150px; 
-  border: 2px solid #000000;
+  width: 200px; 
+  height: 200px; 
+  border: 4px solid #000000;
   border-radius: 50%; 
-  background-color: #ffffff;
+  background-color: hsl(60, 7%, 59%);
   transform: translate(-50%, -50%); 
 }
 
@@ -64,17 +65,17 @@
 
 .hand.hour {
   width: 4px; 
-  height: 40px; 
+  height: 60px; 
 }
 
 .hand.minute {
   width: 2px; 
-  height: 60px; 
+  height: 70px; 
 }
 
 .hand.second {
   width: 2px;
-  height: 70px; 
+  height: 80px; 
   background-color: hsl(0, 32%, 11%); 
 }
 
@@ -85,71 +86,206 @@
   align-items: flex-end; 
   flex-wrap: nowrap; 
   overflow: auto; 
-  padding-bottom: 25px; 
+  padding-bottom: 30px; 
 }
-  .switch {
-    margin: 0 5px; 
-    position: relative;
-    display: inline-block;
-    width: 12px;
-    height: 20px;
-   
-  }
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 34px;
-  }
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 4px;
-    width: 4px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-  }
-  input:checked + .slider {
-    background-color: hwb(208 4% 73%);
-  }
-  input:checked + .slider:before {
-    transform: translateX(4px);
-  }
 
-  .light-button {
-  width: 5px; 
-  height: 15px;
-  border-radius: 50%; 
-  border: 1px solid #ccc; 
-  background-color: #ccc; 
-  cursor: pointer;
-  margin-bottom: 5px; 
+.switch-container {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+
+}
+
+.lights{
+  margin-bottom: 35px;
+  display: flex;
+  margin-right: 90px;
+}
+.switches{
+  margin-bottom: 15px;
+  display: flex;
+  margin-right:90px;
+}
+
+.light{
+  width: 13px;
+  height: 13px;
+  margin:3px;
+  background-color: rgb(228, 191, 147);
+  border-radius: 50%;
+  border: 2px solid #000000;
+}
+
+.switch {
+    width: 14px; 
+    height: 30px; 
+    background-color: #d1bcbc;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    margin:2.5px;
+    border: 2px solid #000000;
+}
+
+
+.slider {
+    width: 8px; 
+    height: 10px; 
+    position: absolute;
+    top: 1px; 
+    left: 3px;
+    background-color: rgb(72, 54, 54);
+    border-radius: 50%;
+    transition: all 0.3s
+}
+
+
+.bottom-lights {
+    margin-bottom:5px; 
+    display: flex;
+    
+}
+
+.bottom-light {
+    width: 20px;
+    height: 20px;
+    margin: 10px;
+    background-color: rgb(154, 237, 128);
+    border-radius: 50%;
+    border: 2px solid #000000;
+}
+
+
+.register-lights {
+  display: flex;
+  margin-bottom: 230px;
+  margin-right: -460px;
+}
+
+.register-light {
+  width: 13px;
+  height: 13px;
+  margin: 5px;
+  background-color: grey;
+  border-radius: 50%;
+  border: 1px solid #000000;
+  }
+.button-container {
+  position: absolute;
+  right: 50px;
+  top: 50%;
+  
+}
+
+.outer-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ddd;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  margin-bottom: 230px;
+  flex-direction: column;
+  border: 1px solid #000000;
+  transform: translateY(-238%)translateX(50%);
 }
 
-.light-on {
-  background-color: hsl(25, 100%, 50%); 
+.rotate-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #aebcae;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 1px solid #000000;
 }
 
+.rectangle {
+  width: 20px;
+  height: 7px;
+  background-color: white;
+  border: 1px solid #000000;
+ }
+
+ .outer-circle2 {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 180px;
+  flex-direction: column;
+  border: 1px solid #000000;
+  transform: translateY(-668%)translateX(50%);
+ 
+}
+
+.rotate-button2 {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #aebcae;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 1px solid #000000;
+}
+
+.rectangle2 {
+  width: 20px;
+  height: 7px;
+  background-color: white;
+  border: 1px solid #000000;
+ }
+
+ .outer-circle3 {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 90px;
+  flex-direction: column;
+  border: 1px solid #000000;
+  transform: translateY(-1040%)translateX(50%);
+}
+ 
+
+.rotate-button3 {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #aebcae;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+  border: 1px solid #000000;
+}
+
+.rectangle3 {
+  width: 20px;
+  height: 7px;
+  background-color: white;
+  border: 1px solid #000000;
+ }
+ 
 .rotary-panel {
     position: absolute;
-    top: 2px; 
-    left: 8px; 
+    top: 30px; 
+    left: 45px; 
     width: 150px; 
     height: 150px;
     border-radius: 50%;
@@ -165,7 +301,7 @@
     height: 100%;
     position: absolute;
     border-radius: 50%;
-    background: #fdaa05;
+    background: #ead5a9;
     transition: transform 1s ease-in-out;
     display: flex;
     justify-content: center;
@@ -178,7 +314,7 @@
     height: 20px;
     top: 50%;
     left: 50%;
-    background-color: #f9ec56;
+    background-color: #e7e4c5;
     border: 1px solid #000;
     border-radius: 50%;
     text-align: center;
@@ -209,7 +345,7 @@
     width: 55px;
     height: 20px;
     padding-top: 40px;
-    background-color: rgb(251, 251, 251);
+    background-color: rgb(179, 172, 172);
     border-radius: 50%;
     box-shadow: -2px -2px 3px #888, 2px 2px 3px #888, -2px 2px 3px #888,
     2px -2px 3px #888;
@@ -254,21 +390,21 @@
   .row {
     display: flex;
     justify-content: center; 
-    gap: 15px; 
+    gap: 20px; 
   }
   .button {
     padding: 10px;
     border-radius: 50%; 
-    background-color: #80c950;
+    background-color: rgb(197, 218, 114);
     border: 2px solid #080808;
     color: white;
     cursor: pointer;
     width: 10px; 
-    height: 10px; 
+    height: 20px; 
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 4px;
+    margin: 7px;
   }
 .button-clicked {
 background-color: hsl(245, 39%, 49%); 
@@ -286,7 +422,34 @@ background-color: hsl(245, 39%, 49%);
         <div class="seconds"></div>
       </div>
     </div>
-    <div class="rectangle middle" id="switchesContainer"> 
+    <div class="rectangle middle"> 
+      <div class="register-lights">
+      </div>
+      <div class="button-container">
+        <div class="outer-circle">
+          <div id="rotate-button" class="rotate-button">
+            <div class="rectangle"></div>
+          </div>
+        </div>
+
+        <div class="outer-circle2">
+          <div id="rotate-button2" class="rotate-button2">
+            <div class="rectangle2"></div>
+          </div>
+        </div>
+
+        <div class="outer-circle3">
+          <div id="rotate-button3" class="rotate-button3">
+            <div class="rectangle3"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="switchesContainer">  
+        <div class="lights"></div>
+        <div class="switches"></div>
+        <div class="bottom-lights"></div>
+      </div>
       <div class="rotary-panel">
         <div class="center-bottom"></div>
         <div class="dial">
@@ -303,7 +466,7 @@ background-color: hsl(245, 39%, 49%);
             <div class="number" data-number="9">9</div>
             <div class="number" data-number="0">0</div>
         </div>
-      </div>  
+      </div> 
     </div>
     <div class="rectangle small" id="gridContainer"></div>
   </div>  
@@ -311,48 +474,91 @@ background-color: hsl(245, 39%, 49%);
 <script>
 
 
-  document.addEventListener('DOMContentLoaded', (event) => {
-    const switchesContainer = document.getElementById('switchesContainer');
-    
-    for (let i = 1; i <= 18; i++) {
-      const buttonSwitchContainer = document.createElement('div'); 
-      buttonSwitchContainer.className = 'button-switch-container';
-      
-      const lightButton = document.createElement('button'); 
-      lightButton.className = 'light-button';
-      lightButton.id = `light${i}`; 
-      
-      const switchLabel = document.createElement('label');
-      switchLabel.className = 'switch';
-      
-      const input = document.createElement('input');
-      input.type = 'checkbox';
-      input.id = `switch${i}`;
-      input.addEventListener('change', function() { 
-        const lightButton = document.getElementById(`light${i}`);
-        if (this.checked) {
-          lightButton.classList.add('light-on'); 
-        } else {
-          lightButton.classList.remove('light-on'); 
-        }
-      });
+document.addEventListener('DOMContentLoaded', function () {
+       const lightsContainer = document.querySelector('.lights');
+       const switchesContainer = document.querySelector('.switches');
+       const bottomLightsContainer = document.querySelector('.bottom-lights');
 
-      const slider = document.createElement('span');
-      slider.className = 'slider';
-      
-      switchLabel.appendChild(input);
-      switchLabel.appendChild(slider);
-      
-      buttonSwitchContainer.appendChild(lightButton); 
-      buttonSwitchContainer.appendChild(switchLabel); 
-      switchesContainer.appendChild(buttonSwitchContainer); 
+
+       for (let i = 1; i <= 20; i++) {
+
+          const light = document.createElement('div');
+          light.className = 'light';
+          lightsContainer.appendChild(light);
+
+          const sw = document.createElement('div');
+          sw.className = 'switch';
+          switchesContainer.appendChild(sw);
+
+          const slider = document.createElement('div');
+          slider.className = 'slider';
+          slider.style.top = '1px';
+          sw.appendChild(slider);
+
+        
+          sw.addEventListener('click', function () {
+              if (slider.style.top === '1px') {
+                  slider.style.top = '19px'; 
+                  slider.style.left = '3px';
+              } else {
+                  slider.style.top = '1px'; 
+                  slider.style.left = '3px';
+              }
+        });
+        }
+        for (let i = 1; i <= 11; i++) {
+        const bottomLight = document.createElement('div');
+        bottomLight.className = 'bottom-light';
+        bottomLightsContainer.appendChild(bottomLight);
     }
+});
+document.addEventListener('DOMContentLoaded', function () {
+            const lightsContainer = document.querySelector('.register-lights');
+
+
+    for (let i = 1; i <= 11; i++) {
+    const light = document.createElement('div');
+                light.className = 'register-light';
+                lightsContainer.appendChild(light);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const rotateButton = document.getElementById('rotate-button');
+  let angle = 0;
+
+  rotateButton.addEventListener('click', function () {
+    angle += 45; 
+    rotateButton.style.transform = `rotate(${angle}deg)`;
   });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const rotateButton2 = document.getElementById('rotate-button2');
+  let angle = 0;
+
+  rotateButton2.addEventListener('click', function () {
+    angle += 45; 
+    rotateButton2.style.transform = `rotate(${angle}deg)`;
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const rotateButton3 = document.getElementById('rotate-button3');
+  let angle = 45;
+
+  rotateButton3.addEventListener('click', function () {
+    angle += 45; 
+    rotateButton3.style.transform = `rotate(${angle}deg)`;
+  });
+});
+
   
   const numberAngles = {
             "1": 130,    
             "2": 160,   
-            "3": 190,   
+            "3": 190, 
+            "4": 210,  
             "5": 250,
             "6": 280,
             "7": 310,
