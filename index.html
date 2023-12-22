@@ -27,7 +27,7 @@
 
 .rectangle.small {
   width: 280px; 
-  height: 250px;
+  height: 300px;
   border: 4px solid #000000; 
   background-color: #bbaeae; 
 }
@@ -39,10 +39,16 @@
   position: relative;
 }
 
-.rectangle.small {
-  position: relative; 
+.rectangle.right {
+  width: 280px; 
+  height: 300px;
+  border: 4px solid #000000; 
+  background-color: #bbaeae; 
 }
 
+.rectangle.small {
+  position: relative;
+}
 .clock {
   position: absolute; 
   top: 50%; 
@@ -363,58 +369,79 @@
 }
 
 .center-bottom {
-    position: absolute;
-    bottom: 0%;
-    left: 75%;
-    transform: translateX(-70%) rotate(-110deg);
-    width: 35px;
-    height: 25px;
-    background-color: rgba(137, 132, 132, 0.9);
-    border-top: 1px solid #0f0101;
-    z-index: 4;
-    border-radius: 10% 10%  5% 10%; 
+  position: absolute;
+  bottom: 0%;
+  left: 75%;
+  transform: translateX(-70%) rotate(-110deg);
+  width: 35px;
+  height: 25px;
+  background-color: rgba(137, 132, 132, 0.9);
+  border-top: 1px solid #0f0101;
+  z-index: 4;
+  border-radius: 10% 10%  5% 10%; 
 }
 
-        .number[data-number="1"] { top: 35%; left: 10%; }
-        .number[data-number="2"] { top: 20%; left: 20%; }
-        .number[data-number="3"] { top: 10%; left: 35%; }
-        .number[data-number="4"] { top: 10%; left: 52%; }
-        .number[data-number="5"] { top: 18%; left: 67%; }
-        .number[data-number="6"] { top: 33%; left: 74%; }
-        .number[data-number="7"] { top: 50%; left: 74%; }
-        .number[data-number="8"] { top: 65%; left: 65%; }
-        .number[data-number="9"] { top: 75%; left: 52%; }
-        .number[data-number="0"] { top: 74%; left: 36%; }
+.number[data-number="1"] { top: 35%; left: 10%; }
+.number[data-number="2"] { top: 20%; left: 20%; }
+.number[data-number="3"] { top: 10%; left: 35%; }
+.number[data-number="4"] { top: 10%; left: 52%; }
+.number[data-number="5"] { top: 18%; left: 67%; }
+.number[data-number="6"] { top: 33%; left: 74%; }
+.number[data-number="7"] { top: 50%; left: 74%; }
+.number[data-number="8"] { top: 65%; left: 65%; }
+.number[data-number="9"] { top: 75%; left: 52%; }
+.number[data-number="0"] { top: 74%; left: 36%; }
 
 
-  .right {
-    display: flex;
-    flex-direction: column;
-    padding: 20px; 
-    gap: 10px;
-    align-items: center; 
-    justify-content: start; 
-  }
+.right {
+  display: flex;
+  flex-direction: column;
+  padding: 20px; 
+  gap: 10px;
+  align-items: center; 
+  justify-content: start; 
+}
 
-  .row {
-    display: flex;
-    justify-content: center; 
-    gap: 20px; 
-  }
-  .button {
-    padding: 10px;
-    border-radius: 50%; 
-    background-color: rgb(197, 218, 114);
-    border: 2px solid #080808;
-    color: white;
-    cursor: pointer;
-    width: 10px; 
-    height: 20px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 7px;
-  }
+.row {
+  display: flex;
+  justify-content: center; 
+  gap: 10px; 
+  margin-top:-5px;
+}
+
+.description {
+  display: flex;
+  justify-content: space-around;
+}
+
+.description-cell {
+  padding: 3px;
+  margin: 0 10px; 
+}
+
+.input-tag {
+  margin-left: -60px;
+  margin-bottom: -30px;
+  margin-right: 0px; /* 在标签和行之间添加一些间隔 */
+}
+
+
+  
+.button {
+  padding: 10px;
+  border-radius: 50%; 
+  background-color: rgb(197, 218, 114);
+  border: 2px solid #080808;
+  color: rgb(7, 7, 7);
+  cursor: pointer;
+  width: 10px; 
+  height: 10px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+  margin-top: 8px;
+}
 .button-clicked {
 background-color: hsl(245, 39%, 49%); 
 }
@@ -477,8 +504,14 @@ background-color: hsl(245, 39%, 49%);
         </div>
       </div> 
     </div>
-    <div class="rectangle small" id="gridContainer"></div>
-  </div>  
+    <div class="rectangle small right" id="gridContainer">
+      <div class="row description">
+        <div class="input-tag">INPUT</div>
+        <div class="description-cell">1</div>
+        <div class="description-cell">3</div>
+        <div class="description-cell">5</div>
+      </div>
+      
 </div>
 <script src="interpreter.js"></script>
 <script>
@@ -516,54 +549,54 @@ solidac.setPostOrderHook(function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-       const lightsContainer = document.querySelector('.lights');
-       const switchesContainer = document.querySelector('.switches');
-       const bottomLightsContainer = document.querySelector('.bottom-lights');
+  const lightsContainer = document.querySelector('.lights');
+  const switchesContainer = document.querySelector('.switches');
+  const bottomLightsContainer = document.querySelector('.bottom-lights');
 
 
-       for (let i = 1; i <= 20; i++) {
+  for (let i = 1; i <= 20; i++) {
 
-          const light = document.createElement('div');
-          light.id = `light-${i}`;
-          light.className = 'light';
-          lightsContainer.appendChild(light);
+    const light = document.createElement('div');
+    light.id = `light-${i}`;
+    light.className = 'light';
+    lightsContainer.appendChild(light);
 
-          const sw = document.createElement('div');
-          sw.className = 'switch';
-          switchesContainer.appendChild(sw);
+    const sw = document.createElement('div');
+    sw.className = 'switch';
+    switchesContainer.appendChild(sw);
 
-          const slider = document.createElement('div');
-          slider.className = 'slider';
-          slider.style.top = '1px';
-          sw.appendChild(slider);
+    const slider = document.createElement('div');
+    slider.className = 'slider';
+    slider.style.top = '1px';
+    sw.appendChild(slider);
 
         
-          sw.addEventListener('click', function () {
-              if (slider.style.top === '1px') {
-                  slider.style.top = '19px'; 
-                  slider.style.left = '3px';
-              } else {
-                  slider.style.top = '1px'; 
-                  slider.style.left = '3px';
-              }
-        });
-        }
-        for (let i = 1; i <= 11; i++) {
-        const bottomLight = document.createElement('div');
-        bottomLight.className = 'bottom-light';
-        bottomLightsContainer.appendChild(bottomLight);
+    sw.addEventListener('click', function () {
+    if (slider.style.top === '1px') {
+      slider.style.top = '19px'; 
+      slider.style.left = '3px';
+    } else {
+        slider.style.top = '1px'; 
+        slider.style.left = '3px';
+      }
+    });
+  }
+  for (let i = 1; i <= 11; i++) {
+    const bottomLight = document.createElement('div');
+    bottomLight.className = 'bottom-light';
+    bottomLightsContainer.appendChild(bottomLight);
     }
 });
 document.addEventListener('DOMContentLoaded', function () {
-            const lightsContainer = document.querySelector('.register-lights');
+  const lightsContainer = document.querySelector('.register-lights');
 
 
-    for (let i = 1; i <= 11; i++) {
-    const light = document.createElement('div');
-    light.id = `register-light-${i}`;
-                light.className = 'register-light';
-                lightsContainer.appendChild(light);
-    }
+  for (let i = 1; i <= 11; i++) {
+  const light = document.createElement('div');
+  light.id = `register-light-${i}`;
+  light.className = 'register-light';
+  lightsContainer.appendChild(light);
+  }
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -601,55 +634,75 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
   
-  const numberAngles = {
-            "1": 130,    
-            "2": 160,   
-            "3": 190, 
-            "4": 210,  
-            "5": 250,
-            "6": 280,
-            "7": 310,
-            "8": 340,
-            "9": 370,
-            "0": 400,
-        };
+const numberAngles = {
+  "1": 130,    
+  "2": 160,   
+  "3": 190,
+  "4": 210,  
+  "5": 250,
+  "6": 280,
+  "7": 310,
+  "8": 340,
+  "9": 370,
+  "0": 400,
+};
     
-        document.querySelectorAll('.number').forEach(number => {
-            number.addEventListener('click', function() {
-                rotateDialToNumber(this.dataset.number);
-            });
-        });
+document.querySelectorAll('.number').forEach(number => {
+  number.addEventListener('click', function() {
+  rotateDialToNumber(this.dataset.number);
+  });
+});
     
-        function rotateDialToNumber(number) {
-            const targetAngle = numberAngles[number];
-            const dial = document.querySelector('.dial');
-            dial.style.transform = `rotate(-${targetAngle}deg)`;
-            setTimeout(() => {
-        dial.style.transform = 'rotate(0deg)';
-    }, 2000);
-        }
+function rotateDialToNumber(number) {
+  const targetAngle = numberAngles[number];
+  const dial = document.querySelector('.dial');
+  dial.style.transform = `rotate(-${targetAngle}deg)`;
+  setTimeout(() => {
+    dial.style.transform = 'rotate(0deg)';
+  }, 2000);
+}
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const gridContainer = document.getElementById('gridContainer');
+  const buttonNames = [
+    "G", "G","G",
+    "R", "R","R",
+    "G", "G","G",
+    "R", "R","R",
+    "R", "R","R",
+    " ",  " ", " ",
+  ];
+
   
   for (let row = 0; row < 6; row++) {
     const rowDiv = document.createElement('div');
     rowDiv.className = 'row';
-    
-    for (let button = 0; button < 4; button++) {
+    for (let button = 0; button < 3; button++) { 
+      const buttonIndex = row * 3 + button;
       const buttonDiv = document.createElement('button');
+      buttonDiv.innerText = buttonNames[buttonIndex];
       buttonDiv.className = 'button';
-      buttonDiv.addEventListener('click', function() {
-        this.classList.toggle('button-clicked');
-      });
       rowDiv.appendChild(buttonDiv);
     }
-    
+
     gridContainer.appendChild(rowDiv);
+
+    if (row === 1) {
+      const descriptionRow = document.createElement('div');
+      descriptionRow.className = 'row description';
+
+      for (let i = 0; i < 3; i++) {
+        const descriptionCell = document.createElement('div');
+        descriptionCell.className = 'description-cell';
+        descriptionCell.innerText = i * 2; 
+        descriptionRow.appendChild(descriptionCell);
+      }
+
+      gridContainer.appendChild(descriptionRow);
+    }
   }
 });
-
 
 function updateClock() {
   const now = new Date();
