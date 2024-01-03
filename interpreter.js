@@ -55,9 +55,9 @@ class MachineWord {
   subtract(other){
     this.limitSize();
 
-    this.mumber-=other.toNumber();
+    this.number-=other.toNumber();
 
-    let negative =this.mumber<0;
+    let negative =this.number<0;
 
     this.limitSize();
 
@@ -105,32 +105,39 @@ class Order{
 class SOLIDAC{
   constructor(){
     this.registers={
-      b:Array.from({length:8},()=>new MachineWord(11)), //B-Registers        
-      c:new MachineWord(21), //The control register
-      d:new MachineWord(21), //The multiplier/quptient register      
-      i:new MachineWord(21), //The inspection register
-
+      b:Array.from({length:8},()=>new MachineWord(11)), //B-Registers   
+  
       m:new MachineWord(21), //The double-length accumulator,high half
-      I:new MachineWord(19,false,false)
+      l:new MachineWord(19, false, false), //The double-length accumulator,low half
+      d:new MachineWord(21), //The multiplier/quptient register      
+      s:new MachineWord(20, false), //The store-transfer register
+      c:new MachineWord(21), //The control register
+      v:new MachineWord(21), //The inspection register
     }
+    this.overflown=false;
+    this.underflown=false;
     this.store=Array.from({length:512},()=>new MachineWord(20,false));
     this.postOrderHook = function(){};
   }
+
   executeOrder(order){
     const{f,b,n}=order;
 
     switch(f){
+      case 0:
+        // TODO: stop execution
+        break;
       case 1:
-        this.store[n].assign(this.registers.b[b]);
+        this.writeStore(n, this.registers.b[b]);
         break;
       case 2:
-        this.registers.b[b].assign(this.store[n]);
+        this.registers.b[b].assign(this.readStore(n));
         break;
       case 3:
-        this.registers.b[b].subtract(this.store[n]);
+        this.registers.b[b].subtract(this.readStore(n));
         break;
       case 4:
-        this.registers.b[b].subtract(this.store[n]);
+        this.registers.b[b].subtract(this.readStore(n));
         break;
       case 5:
         this.registers.b[b].assign({number:n,size:11});
@@ -145,7 +152,87 @@ class SOLIDAC{
         this.registers.b[b].and({number:n,size:11});
         break;
       case 9:
-        this.store[n].swap(this.registers.b[b]);
+        this.writeStore(n, this.registers.b[b], 'swap');
+        break;
+      case 10:
+        // TODO: when the input interface is completed
+        break;
+      case 12:
+        if(this.registers.b[b].toNumber() > 0){
+          this.registers.c.assign({number:n,size:11});
+        }
+        break;
+      case 13:
+        if(this.registers.b[b].toNumber() != 0){
+          this.registers.c.assign({number:n,size:11});
+        }
+        break;
+      case 14:
+        this.registers.b[b].subtract({toNumber:()=>1});
+        if(this.registers.b[b].toNumber() != 0){
+          this.registers.c.assign({number:n,size:11});
+        }
+        break;
+      case 15:
+        this.registers.b[b].subtract({toNumber:()=>2});
+        if(this.registers.b[b].toNumber() != 0){
+          this.registers.c.assign({number:n,size:11});
+        }
+        break;
+      case 16:
+        // TODO: when order code parsing is done
+        break;
+      case 17:
+        // TODO: ditto
+        break;
+      case 20:
+        // TODO: when the output interface is completed
+        break;
+      case 21:
+        if(this.getAccumulator().toNumber() < 0){
+          this.registers.c.assign({number:n,size:11});
+        }
+        break;
+      case 22:
+        if(this.getAccumulator().toNumber() > 0){
+          this.registers.c.assign({number:n,size:11});
+        }
+        break;
+      case 23:
+        if(this.getAccumulator().toNumber() != 0){
+          this.registers.c.assign({number:n,size:11});
+        }
+        break;
+      case 24:
+        if(this.underflown){
+          this.registers.c.assign({number:n,size:11});
+        }
+        break;
+      case 25:
+        if(this.overflown){
+          this.registers.c.assign({number:n,size:11});
+        }
+        break;
+      case 26:
+        this.registers.c.assign({number:n,size:11});
+        break;
+      case 27:
+        // TODO
+        break;
+      case 28:
+        // TODO
+        break;
+      case 29:
+        // TODO
+        break;
+      case 31:
+        this.writeStore(n, {number:this.register.l.number,size:20});
+        break;
+      case 32:
+        let s = this.readStore(n);
+        let signBit = s.toNumber() < 0;
+        this.register.l.assign(s);
+        this.register.m.assign({number:signBit?~0:0,size:20});
         break;
       default:
         //Stop
@@ -155,6 +242,24 @@ class SOLIDAC{
 
     this.postOrderHook(this);
   }
+  
+  getAccumulator(){
+    let acc = new MachineWord(39, false);
+    acc.number = ((this.registers.m.number << 19) & 0b11111111111111111111) | (this.registers.l.number & 0b1111111111111111111);
+    return acc;
+  }
+  
+  readStore(n){
+    let v = this.store[n];
+    s.assign(v);
+    return v;
+  }
+  
+  writeStore(n, v, op='assign'){
+    s.assign(v);
+    this.store[n][op](v);
+  }
+
   setPostOrderHook(fn) {
     this.postOrderHook = fn;
   }
