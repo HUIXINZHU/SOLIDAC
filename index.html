@@ -134,34 +134,18 @@
   margin-right: 90px;
 }
 .switches{
-  margin-bottom: 15px;
+  margin-bottom: 60px;
   display: flex;
   margin-right:90px;
 }
-.light_container {
-  text-align: center;
-}
+
 .light{
   width: 13px;
   height: 13px;
   margin:3px;
-  background-color: rgb(228, 191, 147);
+  background-color: rgb(240, 211, 176);
   border-radius: 50%;
   border: 2px solid #000000;
-}
-
-.light[data-lit] {
-  background-color: rgb(254, 141, 27);
-}
-
-.button-comment-container {
-  display: inline-block;
-  margin: 5px;
-  cursor: pointer; 
-}
-
-.comment {
-  text-align: center;
 }
 
 .switch {
@@ -187,40 +171,54 @@
   transition: all 0.3s
 }
 
-
-.bottom-lights {
-    margin-bottom:5px; 
+.operation-light-container, .comments-container {
     display: flex;
-    
+    justify-content: center;
+   
+    margin-right: -520px;
 }
 
-.bottom-light {
-  width: 20px;
-  height: 20px;
-  margin: 10px;
-  background-color: rgb(198, 122, 14);
-  border-radius: 50%;
-  border: 2px solid #000000;
+.operation-light, .comment {
+    width: 20px; 
+    margin: 12.5px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.operation-light {
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgb(242, 159, 51);
+    align-items: center;
+    border: 1px solid #000000;
+}
+
+.comment {
+    
+    height: 60px;
+    margin:14px;
+    
 }
 
 
 .register-lights {
   display: flex;
   margin-bottom: 230px;
-  margin-right: -460px;
+  margin-right: -445px;
 }
 
 .register-light {
   width: 13px;
   height: 13px;
   margin: 5px;
-  background-color: grey;
+  background-color: rgb(161, 161, 161);
   border-radius: 50%;
   border: 1px solid #000000;
   }
 
 .register-light[data-lit] {
-  background-color: rgb(255, 119, 0);
+  background-color: rgb(245, 245, 245)
   }
 
 .button-container {
@@ -494,7 +492,8 @@
     </div>
     <div class="rectangle middle"> 
       <div class="register-lights" id="register-lights"></div>
-      <div class="light_container" id="light_container"></div>
+      <div class="operation-light-container" id="comments-container"></div>
+        <div class="operation-light-container" id="lights-container"></div>
       <div class="button-container">
         <div class="outer-circle">
           <div id="rotate-button" class="rotate-button">
@@ -611,28 +610,28 @@ document.addEventListener('DOMContentLoaded', function () {
         slider.style.left = '3px';
       }
     });
-  }
-  
-  const comments = [
-    "IS", "GO", "SS", "OST", "WAIT",
-    "ABS", "IO", "OS", "TOF", "POF", "OR"
-  ];
-  const container = document.getElementById('light_container');
-  for (let i = 1; i <= 11; i++) {
-    const buttonCommentContainer = document.createElement('div');
-    buttonCommentContainer.className = 'button-comment-container';
-
-    const bottomLight = document.createElement('div');
-    bottomLight.className = 'bottom-light';
-    bottomLightsContainer.appendChild(bottomLight);
-    }
-    const comment = document.createElement('div');
-    comment.className = 'comment';
-    comment.innerText = comments[i];
-    buttonCommentContainer.appendChild(comment);
-
-    container.appendChild(buttonCommentContainer);
+  }   
 });
+
+const comments = [
+            "IS", "GO", "SS", "OST", "WAIT",
+            "ABS", "IO", "OS", "TOF", "POF", "OR"
+        ];
+        const commentsContainer = document.getElementById('comments-container');
+        const lightsContainer = document.getElementById('lights-container');
+
+        for (let i = 0; i < comments.length; i++) {
+            // 创建注释
+            const comment = document.createElement('div');
+            comment.className = 'comment';
+            comment.innerText = comments[i];
+            commentsContainer.appendChild(comment);
+
+            // 创建灯
+            const light = document.createElement('div');
+            light.className = 'operation-light';
+            lightsContainer.appendChild(light);
+        }
 
 document.addEventListener('DOMContentLoaded', function () {
   const lightsContainer = document.querySelector('.register-lights');
