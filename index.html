@@ -9,8 +9,83 @@
   height: 100%;
   margin: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: center; 
+}
+
+#load_switch_container {
+  margin: -180px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #aaa;
+  width: 160px;
+  margin-top: -780px; 
+  margin-left: 20px;
+}
+
+.load_switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.load_switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.load_slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.load_slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .load_slider {
+  background-color: #2196F3;
+}
+
+input:focus + .load_slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .load_slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.load_slider.round {
+  border-radius: 34px;
+}
+
+.load_slider.round:before {
+          border-radius: 50%;
+}
+
+#statusText {
+  white-space: nowrap;
+  min-width: 200px;         
 }
 
  .container {
@@ -535,6 +610,13 @@
 </style>
 </head>
 <body>
+  <div id="load_switch_container">
+    <label class="load_switch">
+        <input type="checkbox" id="toggle">
+        <span class="load_slider round"></span>
+    </label>
+    <p id="statusText" style="display:none;">program is loading...</p>
+  </div>
   <div class="container">
     <div class="rectangle small">
       <div class="clock">
@@ -609,7 +691,7 @@
 
       </div>
       
-</div>
+  </div>
 <script src="interpreter.js"></script>
 <script>
 
@@ -876,6 +958,15 @@ document.addEventListener('DOMContentLoaded', function () {
   switchBottom.addEventListener('click', function () {
       sliderBottom.style.top = sliderBottom.style.top === '1px' ? '13px' : '1px';
   });
+});
+
+document.getElementById('toggle').addEventListener('change', function() {
+  var statusText = document.getElementById('statusText');
+  if (this.checked) {
+    statusText.style.display = 'block';
+  } else {
+      statusText.style.display = 'none';
+    }
 });
 </script>
 
