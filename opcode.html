@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop with Animation</title>
+    <style>
+        #dropzone {
+            border: 4px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            margin: 30px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        #dropzone.highlight {
+            background-color: #e0e0e0;
+            border-color: #333;
+        }
+
+        #opcodeDisplay {
+            opacity: 0;
+            transition: opacity 2s;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="dropzone">Drag and Drop the file here</div>
+    <div id="opcodeDisplay"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropzone = document.getElementById('dropzone');
+            const opcodeDisplay = document.getElementById('opcodeDisplay');
+
+            dropzone.addEventListener('dragover', function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'copy';
+                dropzone.classList.add('highlight');
+            });
+
+            dropzone.addEventListener('dragleave', function(event) {
+                dropzone.classList.remove('highlight');
+            });
+
+            dropzone.addEventListener('drop', function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+                dropzone.classList.remove('highlight');
+
+                const file = event.dataTransfer.files[0];
+                if (!file) {
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const content = e.target.result;
+                    processFileContent(content);
+                };
+                reader.readAsText(file);
+            });
+
+            function processFileContent(content) {
+                const lines = content.split('\n');
+                for (const line of lines) {
+                    if (line.startsWith('instruction code:')) {
+                        const instruction = line.split(':')[1].trim();
+                        const opcode = processInstruction(instruction);
+                        showOpcode(opcode);
+                    }
+                }
+            }
+
+            function processInstruction(instruction) {
+                const instruction_parts = instruction.split(".");
+                let opcode = parseInt(instruction_parts[0]) << 14;
+                return opcode;
+            }
+
+            function showOpcode(opcode) {
+                opcodeDisplay.textContent = 'Opcode: ' + opcode;
+                opcodeDisplay.style.opacity = 1;
+                console.log('Opcode:', opcode); 
+            }
+        });
+    </script>
+</body>
+</html>
