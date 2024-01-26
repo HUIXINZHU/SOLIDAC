@@ -1,619 +1,759 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Layout</title>
-<style>
- html, body {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center; 
-}
-
-#load_switch_container {
-  margin: -180px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px #aaa;
-  width: 160px;
-  margin-top: -780px; 
-  margin-left: 20px;
-}
-
-.load_switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.load_switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.load_slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.load_slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .load_slider {
-  background-color: #2196F3;
-}
-
-input:focus + .load_slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .load_slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-.load_slider.round {
-  border-radius: 34px;
-}
-
-.load_slider.round:before {
-          border-radius: 50%;
-}
-
-#statusText {
-  white-space: nowrap;
-  min-width: 200px;         
-}
-
- .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center; 
-  width: 1300px; 
-  height: 400px; 
-  border: 4px solid #000000; 
-  padding: 30px; 
-  background-color: #b9b9b9;
- }
-
-
-.rectangle.small {
-  width: 280px; 
-  height: 300px;
-  border: 4px solid #000000; 
-  background-color: #bbaeae; 
-}
-.rectangle.middle {
-  width: 570px; 
-  height: 350px; 
-  border: 4px solid #000000; 
-  background-color: #b6a8a8;
-  position: relative;
-}
-
-.rectangle.right {
-  width: 280px; 
-  height: 300px;
-  border: 4px solid #000000; 
-  background-color: #bbaeae; 
-}
-
-.rectangle.small {
-  position: relative;
-}
-.clock {
-  position: absolute; 
-  margin-top:-50px;
-  top: 50%; 
-  left: 50%; 
-  width: 150px; 
-  height: 150px; 
-  border: 4px solid #000000;
-  border-radius: 50%; 
-  background-color: hsl(60, 30%, 83%);
-  transform: translate(-50%, -50%); 
-}
-
-.hand {
-  position: absolute;
-  bottom: 50%; 
-  left: 50%;
-  background-color: #000000;
-  transform-origin: 50% 100%; 
-}
-
-.hand.hour {
-  width: 4px; 
-  height: 45px; 
-}
-
-.hand.minute {
-  width: 2px; 
-  height: 60px; 
-}
-
-.hand.second {
-  width: 2px;
-  height: 65px; 
-  background-color: hsl(0, 32%, 11%); 
-}
-.circle-lights{
-  position: absolute;
-  justify-content: center; 
-}
-.circle-light {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: rgb(174, 45, 45);
-  margin-left:30px;
-  margin-top: 150px;
-  border: 1px solid #000000;
-}
-
-.circle-button {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: rgb(75, 75, 180);
-  border: none;
-  margin-left: 30px;
-  margin-top: 3px;
-  border: 1px solid #000000;
-}
-
-.text {
-  margin-top: 6px;
-  text-align: center;
-}
-
-.switch_1 {
-  width: 14px; 
-  height: 25px; 
-  background-color: #a5a5a5;
-  border-radius: 50px;
-  position: relative;
-  margin:30px;
-  border: 2px solid #000000;
-  margin-top: 0px;
-}
-
-.slider_1 {
-  width: 8px; 
-  height: 10px; 
-  position: absolute;
-  top: 1px; 
-  left: 3px;
-  background-color: rgb(72, 54, 54);
-  border-radius: 50%;
-  transition: all 0.3s
-}
-
-.middle {
-  display: flex;
-  justify-content: flex-end; 
-  align-items: flex-end; 
-  flex-wrap: nowrap; 
-  overflow: auto; 
-  padding-bottom: 30px; 
-}
-
-.switch-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 10px;
-
-}
-
-.lights{
-  margin-bottom: 35px;
-  display: flex;
-  margin-right: 90px;
-}
-.switches{
-  margin-bottom: 60px;
-  display: flex;
-  margin-right:90px;
-}
-
-.light{
-  width: 13px;
-  height: 13px;
-  margin:3px;
-  background-color: rgb(240, 211, 176);
-  border-radius: 50%;
-  border: 2px solid #000000;
-}
-
-.switch {
-  width: 14px; 
-  height: 30px; 
-  background-color: #bbb6b6;
-  border-radius: 10px;
-  position: relative;
-  cursor: pointer;
-  margin:2.5px;
-  border: 2px solid #000000;
-}
-
-.slider {
-  width: 8px; 
-  height: 10px; 
-  position: absolute;
-  top: 1px; 
-  left: 3px;
-  background-color: rgb(72, 54, 54);
-  border-radius: 50%;
-  transition: all 0.3s
-}
-
-.operation-light-container, .comments-container {
-  display: flex;
-  justify-content: center; 
-  margin-right: -520px;
-}
-
-.operation-light, .comment {
-  width: 20px; 
-  margin: 12.5px; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.operation-light {
-  height: 20px;
-  border-radius: 50%;
-  background-color: rgb(242, 159, 51);
-  align-items: center;
-  border: 1px solid #000000;
-  margin-bottom: 25px;
-}
-
-.comment {  
-  height: 0px;
-  margin:14px;
-}
-
-
-.register-lights {
-  display: flex;
-  margin-bottom: 230px;
-  margin-right: -475px;
-}
-
-.register-light {
-  width: 13px;
-  height: 13px;
-  margin: 5px;
-  background-color: rgb(161, 161, 161);
-  border-radius: 50%;
-  border: 1px solid #000000;
-  }
-
-.register-light[data-lit] {
-  background-color: rgb(245, 245, 245)
-  }
-
-.button-container {
-  position: absolute;
-  right: 50px;
-  top: 50%;
-  
-}
-
-.switch_bottom_container {
-  display: flex; 
-  justify-content: center;
-  align-items: center; 
-  margin-right: -130px;
-}
-
-.switch_bottom {
-  width: 14px; 
-  height: 25px; 
-  background-color: #a5a5a5;
-  border-radius: 10px;
-  position: relative;
-  cursor: pointer;
-  margin:8px;
-  border: 2px solid #000000;
-  margin-bottom: -40px;
-  
-}
-
-
-.slider_bottom {
-  width: 8px; 
-  height: 10px; 
-  position: absolute;
-  top: 1px; 
-  left: 3px;
-  background-color: rgb(72, 54, 54);
-  border-radius: 50%;
-  transition: all 0.3s
-  
-}
-
-
-.outer-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 230px;
-  flex-direction: column;
-  border: 1px solid #000000;
-  transform: translateY(-238%)translateX(50%);
-}
-
-.rotate-button {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #aebcae;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-  border: 1px solid #000000;
-}
-
-.rectangle {
-  width: 20px;
-  height: 7px;
-  background-color: white;
-  border: 1px solid #000000;
- }
-
- .outer-circle2 {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 180px;
-  flex-direction: column;
-  border: 1px solid #000000;
-  transform: translateY(-668%)translateX(50%);
- 
-}
-
-.rotate-button2 {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #aebcae;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-  border: 1px solid #000000;
-}
-
-.rectangle2 {
-  width: 20px;
-  height: 7px;
-  background-color: white;
-  border: 1px solid #000000;
- }
-
- .outer-circle3 {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 90px;
-  flex-direction: column;
-  border: 1px solid #000000;
-  transform: translateY(-1040%)translateX(50%);
-}
- 
-
-.rotate-button3 {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #aebcae;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-  border: 1px solid #000000;
-}
-
-.rectangle3 {
-  width: 20px;
-  height: 7px;
-  background-color: white;
-  border: 1px solid #000000;
- }
- 
-.rotary-panel {
-  position: absolute;
-  top: 30px; 
-  left: 45px; 
-  width: 150px; 
-  height: 150px;
-  border-radius: 50%;
-  box-shadow: 2px 2px 3px #201f1f, inset 2px 2px 3px #888, inset -2px -2px 3px #ffd,
-  inset 2px -2px 3px #ffd, inset -2px 2px 3px #ffd, -2px -2px 3px #ffd,2px -2px 3px #ffd, -2px 2px 3px #ffd;
-  border: 1px solid rgb(57, 57, 47);
-  z-index: 1;
-}
-
-.dial {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  border-radius: 50%;
-  background: #ead5a9;
-  transition: transform 1s ease-in-out;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.number {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  top: 50%;
-  left: 50%;
-  background-color: #e7e4c5;
-  border: 1px solid #000;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 20px;
-  font-size: 10px;
-  cursor: pointer;
-    
-}
-
-.dial-inner {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  position: absolute;
-  top: 3.5px;
-  left: 4px;
-  box-shadow: 2px 2px 3px #201f1f, inset 2px 2px 3px #888, inset -2px -2px 3px #ffd,inset 2px -2px 3px #ffd, inset -2px 2px 3px #ffd, -2px -2px 3px #ffd,
-  2px -2px 3px #ffd, -2px 2px 3px #ffd;
-  border: 1px solid rgb(57, 57, 47);
-}
-
-.dial-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 55px;
-  height: 20px;
-  padding-top: 40px;
-  background-color: rgb(179, 172, 172);
-  border-radius: 50%;
-  box-shadow: -2px -2px 3px #888, 2px 2px 3px #888, -2px 2px 3px #888,2px -2px 3px #888;
-  overflow: hidden;
-  text-align: center;
-}
-
-.center-bottom {
-  position: absolute;
-  bottom: 0%;
-  left: 75%;
-  transform: translateX(-70%) rotate(-110deg);
-  width: 35px;
-  height: 25px;
-  background-color: rgba(137, 132, 132, 0.9);
-  border-top: 1px solid #0f0101;
-  z-index: 4;
-  border-radius: 10% 10%  5% 10%; 
-}
-
-.number[data-number="1"] { top: 35%; left: 10%; }
-.number[data-number="2"] { top: 20%; left: 20%; }
-.number[data-number="3"] { top: 10%; left: 35%; }
-.number[data-number="4"] { top: 10%; left: 52%; }
-.number[data-number="5"] { top: 18%; left: 67%; }
-.number[data-number="6"] { top: 33%; left: 74%; }
-.number[data-number="7"] { top: 50%; left: 74%; }
-.number[data-number="8"] { top: 65%; left: 65%; }
-.number[data-number="9"] { top: 75%; left: 52%; }
-.number[data-number="0"] { top: 74%; left: 36%; }
-
-
-.right {
-  display: flex;
-  flex-direction: column;
-  padding: 40px; 
-  align-items: center; 
-  justify-content: start; 
-}
-
-.row, .description-row {
-  display: flex;
-  text-align: left; 
-  margin-top:-25px;
-  gap:-25px;
-  align-items: center;
-}
-
-.button, .description-cell {
-  text-align: left; 
-  margin: 20px;
-  gap:15px;
-  display: flex;
-}
-
-
-.explanation {
-  text-align: left; 
-  flex-grow: 0; 
-  white-space: nowrap; 
-  margin-right: 99px; 
-  width: 10px; 
-}
-
-.button {
-  padding: 10px;
-  border-radius: 50%; 
-  background-color: rgb(228, 171, 28);
-  border: 2px solid #080808;
-  color: rgb(7, 7, 7);
-  cursor: pointer;
-  width: 10px; 
-  height: 10px; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.button-clicked {
-  background-color: hsl(245, 39%, 49%); 
-}
-  
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+    }
+
+
+    #dropzone_container {
+
+      position: absolute;
+      top: 35px;
+      left: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+    }
+
+    #dropzone {
+      border: 4px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      transition: background-color 0.3s, border-color 0.3s;
+
+    }
+
+    #dropzone.highlight {
+      background-color: #e0e0e0;
+      border-color: #333;
+
+    }
+
+    #opcodeDisplay {
+      opacity: 0;
+      transition: opacity 2s;
+      margin-top: 15px;
+      margin-left: 25px;
+
+    }
+
+
+
+    #load_switch_container {
+      margin: -180px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0px 0px 10px #aaa;
+      width: 160px;
+      margin-top: -780px;
+      margin-left: 20px;
+    }
+
+    .load_switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .load_switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .load_slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .load_slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked+.load_slider {
+      background-color: #2196F3;
+    }
+
+    input:focus+.load_slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked+.load_slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    .load_slider.round {
+      border-radius: 34px;
+    }
+
+    .load_slider.round:before {
+      border-radius: 50%;
+    }
+
+    #statusText {
+      white-space: nowrap;
+      min-width: 200px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 1300px;
+      height: 400px;
+      border: 4px solid #000000;
+      padding: 30px;
+      background-color: #b9b9b9;
+    }
+
+
+    .rectangle.small {
+      width: 280px;
+      height: 300px;
+      border: 4px solid #000000;
+      background-color: #bbaeae;
+    }
+
+    .rectangle.middle {
+      width: 570px;
+      height: 350px;
+      border: 4px solid #000000;
+      background-color: #b6a8a8;
+      position: relative;
+    }
+
+    .rectangle.right {
+      width: 280px;
+      height: 300px;
+      border: 4px solid #000000;
+      background-color: #bbaeae;
+    }
+
+    .rectangle.small {
+      position: relative;
+    }
+
+    .clock {
+      position: absolute;
+      margin-top: -50px;
+      top: 50%;
+      left: 50%;
+      width: 150px;
+      height: 150px;
+      border: 4px solid #000000;
+      border-radius: 50%;
+      background-color: hsl(60, 30%, 83%);
+      transform: translate(-50%, -50%);
+    }
+
+    .hand {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      background-color: #000000;
+      transform-origin: 50% 100%;
+    }
+
+    .hand.hour {
+      width: 4px;
+      height: 45px;
+    }
+
+    .hand.minute {
+      width: 2px;
+      height: 60px;
+    }
+
+    .hand.second {
+      width: 2px;
+      height: 65px;
+      background-color: hsl(0, 32%, 11%);
+    }
+
+    .circle-lights {
+      position: absolute;
+      justify-content: center;
+    }
+
+    .circle-light {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: rgb(174, 45, 45);
+      margin-left: 30px;
+      margin-top: 150px;
+      border: 1px solid #000000;
+    }
+
+    .circle-button {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: rgb(75, 75, 180);
+      border: none;
+      margin-left: 30px;
+      margin-top: 3px;
+      border: 1px solid #000000;
+    }
+
+    .text {
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    .switch_1 {
+      width: 14px;
+      height: 25px;
+      background-color: #a5a5a5;
+      border-radius: 50px;
+      position: relative;
+      margin: 30px;
+      border: 2px solid #000000;
+      margin-top: 0px;
+    }
+
+    .slider_1 {
+      width: 8px;
+      height: 10px;
+      position: absolute;
+      top: 1px;
+      left: 3px;
+      background-color: rgb(72, 54, 54);
+      border-radius: 50%;
+      transition: all 0.3s
+    }
+
+    .middle {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      flex-wrap: nowrap;
+      overflow: auto;
+      padding-bottom: 30px;
+    }
+
+    .switch-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 10px;
+
+    }
+
+    .lights {
+      margin-bottom: 35px;
+      display: flex;
+      margin-right: 90px;
+    }
+
+    .switches {
+      margin-bottom: 60px;
+      display: flex;
+      margin-right: 90px;
+    }
+
+    .light {
+      width: 13px;
+      height: 13px;
+      margin: 3px;
+      background-color: rgb(240, 211, 176);
+      border-radius: 50%;
+      border: 2px solid #000000;
+    }
+
+    .switch {
+      width: 14px;
+      height: 30px;
+      background-color: #bbb6b6;
+      border-radius: 10px;
+      position: relative;
+      cursor: pointer;
+      margin: 2.5px;
+      border: 2px solid #000000;
+    }
+
+    .slider {
+      width: 8px;
+      height: 10px;
+      position: absolute;
+      top: 1px;
+      left: 3px;
+      background-color: rgb(72, 54, 54);
+      border-radius: 50%;
+      transition: all 0.3s
+    }
+
+    .operation-light-container,
+    .comments-container {
+      display: flex;
+      justify-content: center;
+      margin-right: -520px;
+    }
+
+    .operation-light,
+    .comment {
+      width: 20px;
+      margin: 12.5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .operation-light {
+      height: 20px;
+      border-radius: 50%;
+      background-color: rgb(242, 159, 51);
+      align-items: center;
+      border: 1px solid #000000;
+      margin-bottom: 25px;
+    }
+
+    .comment {
+      height: 0px;
+      margin: 14px;
+    }
+
+
+    .register-lights {
+      display: flex;
+      margin-bottom: 230px;
+      margin-right: -475px;
+    }
+
+    .register-light {
+      width: 13px;
+      height: 13px;
+      margin: 5px;
+      background-color: rgb(161, 161, 161);
+      border-radius: 50%;
+      border: 1px solid #000000;
+    }
+
+    .register-light[data-lit] {
+      background-color: rgb(245, 245, 245)
+    }
+
+    .button-container {
+      position: absolute;
+      right: 50px;
+      top: 50%;
+
+    }
+
+    .switch_bottom_container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: -130px;
+    }
+
+    .switch_bottom {
+      width: 14px;
+      height: 25px;
+      background-color: #a5a5a5;
+      border-radius: 10px;
+      position: relative;
+      cursor: pointer;
+      margin: 8px;
+      border: 2px solid #000000;
+      margin-bottom: -40px;
+
+    }
+
+
+    .slider_bottom {
+      width: 8px;
+      height: 10px;
+      position: absolute;
+      top: 1px;
+      left: 3px;
+      background-color: rgb(72, 54, 54);
+      border-radius: 50%;
+      transition: all 0.3s
+    }
+
+
+    .outer-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ddd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 230px;
+      flex-direction: column;
+      border: 1px solid #000000;
+      transform: translateY(-238%)translateX(50%);
+    }
+
+    .rotate-button {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #aebcae;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 1px solid #000000;
+    }
+
+    .rectangle {
+      width: 20px;
+      height: 7px;
+      background-color: white;
+      border: 1px solid #000000;
+    }
+
+    .annotation {
+      position: flex;
+      transform-origin: 45px;
+      margin-top: -13px;
+      margin-left: -2px;
+      font-size: 10px;
+      font-weight: bold;
+
+    }
+
+    .annotation:nth-child(1) {
+      transform: rotate(-90deg) translate(75px);
+    }
+
+    .annotation:nth-child(2) {
+      transform: rotate(-64.3deg) translate(75px);
+    }
+
+    .annotation:nth-child(3) {
+      transform: rotate(-38.6deg) translate(75px);
+    }
+
+    .annotation:nth-child(4) {
+      transform: rotate(-12.9deg) translate(75px);
+    }
+
+    .annotation:nth-child(5) {
+      transform: rotate(12.8deg) translate(75px);
+    }
+
+    .annotation:nth-child(6) {
+      transform: rotate(38.5deg) translate(75px);
+    }
+
+    .annotation:nth-child(7) {
+      transform: rotate(64.2deg) translate(75px);
+    }
+
+    .annotation:nth-child(8) {
+      transform: rotate(90deg) translate(75px);
+    }
+
+
+
+    .outer-circle2 {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ddd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 180px;
+      flex-direction: column;
+      border: 1px solid #000000;
+      transform: translateY(-668%)translateX(50%);
+
+    }
+
+    .rotate-button2 {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #aebcae;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 1px solid #000000;
+    }
+
+    .rectangle2 {
+      width: 20px;
+      height: 7px;
+      background-color: white;
+      border: 1px solid #000000;
+    }
+
+    .outer-circle3 {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ddd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 90px;
+      flex-direction: column;
+      border: 1px solid #000000;
+      transform: translateY(-1040%)translateX(50%);
+    }
+
+
+    .rotate-button3 {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: #aebcae;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 1px solid #000000;
+    }
+
+    .rectangle3 {
+      width: 20px;
+      height: 7px;
+      background-color: white;
+      border: 1px solid #000000;
+    }
+
+    .rotate-button:focus {
+      outline: none;
+    }
+
+
+    .rotary-panel {
+      position: absolute;
+      top: 30px;
+      left: 45px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      box-shadow: 2px 2px 3px #201f1f, inset 2px 2px 3px #888, inset -2px -2px 3px #ffd,
+        inset 2px -2px 3px #ffd, inset -2px 2px 3px #ffd, -2px -2px 3px #ffd, 2px -2px 3px #ffd, -2px 2px 3px #ffd;
+      border: 1px solid rgb(57, 57, 47);
+      z-index: 1;
+    }
+
+    .dial {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border-radius: 50%;
+      background: #ead5a9;
+      transition: transform 1s ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .number {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      top: 50%;
+      left: 50%;
+      background-color: #e7e4c5;
+      border: 1px solid #000;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 20px;
+      font-size: 10px;
+      cursor: pointer;
+
+    }
+
+    .dial-inner {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      position: absolute;
+      top: 3.5px;
+      left: 4px;
+      box-shadow: 2px 2px 3px #201f1f, inset 2px 2px 3px #888, inset -2px -2px 3px #ffd, inset 2px -2px 3px #ffd, inset -2px 2px 3px #ffd, -2px -2px 3px #ffd,
+        2px -2px 3px #ffd, -2px 2px 3px #ffd;
+      border: 1px solid rgb(57, 57, 47);
+    }
+
+    .dial-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 55px;
+      height: 20px;
+      padding-top: 40px;
+      background-color: rgb(179, 172, 172);
+      border-radius: 50%;
+      box-shadow: -2px -2px 3px #888, 2px 2px 3px #888, -2px 2px 3px #888, 2px -2px 3px #888;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .center-bottom {
+      position: absolute;
+      bottom: 0%;
+      left: 75%;
+      transform: translateX(-70%) rotate(-110deg);
+      width: 35px;
+      height: 25px;
+      background-color: rgba(137, 132, 132, 0.9);
+      border-top: 1px solid #0f0101;
+      z-index: 4;
+      border-radius: 10% 10% 5% 10%;
+    }
+
+    .number[data-number="1"] {
+      top: 35%;
+      left: 10%;
+    }
+
+    .number[data-number="2"] {
+      top: 20%;
+      left: 20%;
+    }
+
+    .number[data-number="3"] {
+      top: 10%;
+      left: 35%;
+    }
+
+    .number[data-number="4"] {
+      top: 10%;
+      left: 52%;
+    }
+
+    .number[data-number="5"] {
+      top: 18%;
+      left: 67%;
+    }
+
+    .number[data-number="6"] {
+      top: 33%;
+      left: 74%;
+    }
+
+    .number[data-number="7"] {
+      top: 50%;
+      left: 74%;
+    }
+
+    .number[data-number="8"] {
+      top: 65%;
+      left: 65%;
+    }
+
+    .number[data-number="9"] {
+      top: 75%;
+      left: 52%;
+    }
+
+    .number[data-number="0"] {
+      top: 74%;
+      left: 36%;
+    }
+
+
+    .right {
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+      align-items: center;
+      justify-content: start;
+    }
+
+    .row,
+    .description-row {
+      display: flex;
+      text-align: left;
+      margin-top: -25px;
+      gap: -25px;
+      align-items: center;
+    }
+
+    .button,
+    .description-cell {
+      text-align: left;
+      margin: 20px;
+      gap: 15px;
+      display: flex;
+    }
+
+
+    .explanation {
+      text-align: left;
+      flex-grow: 0;
+      white-space: nowrap;
+      margin-right: 99px;
+      width: 10px;
+    }
+
+    .button {
+      padding: 10px;
+      border-radius: 50%;
+      background-color: rgb(228, 171, 28);
+      border: 2px solid #080808;
+      color: rgb(7, 7, 7);
+      cursor: pointer;
+      width: 10px;
+      height: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .button-clicked {
+      background-color: hsl(245, 39%, 49%);
+    }
+  </style>
 </head>
+
 <body>
+  <div id="dropzone_container">
+    <div id="dropzone">Drag and Drop the file here</div>
+    <div id="opcodeDisplay"></div>
+  </div>
+
   <div id="load_switch_container">
     <label class="load_switch">
-        <input type="checkbox" id="toggle">
-        <span class="load_slider round"></span>
+      <input type="checkbox" id="toggle">
+      <span class="load_slider round"></span>
     </label>
     <p id="statusText" style="display:none;">program is loading...</p>
   </div>
@@ -635,14 +775,24 @@ input:checked + .load_slider:before {
         <button class="circle-button"></button>
       </div>
     </div>
-    
-    <div class="rectangle middle"> 
+
+    <div class="rectangle middle">
       <div class="register-lights" id="register-lights"></div>
       <div class="operation-light-container" id="comments-container"></div>
       <div class="operation-light-container" id="lights-container"></div>
       <div id="switches-container" class="switch_bottom_container"></div>
 
       <div class="button-container">
+        <div class="annotation">
+          <div class="annotation">B1</div>
+          <div class="annotation">B2</div>
+          <div class="annotation">B3</div>
+          <div class="annotation">B4</div>
+          <div class="annotation">B5</div>
+          <div class="annotation">B6</div>
+          <div class="annotation">B7</div>
+          <div class="annotation">C</div>
+        </div>
         <div class="outer-circle">
           <div id="rotate-button" class="rotate-button">
             <div class="rectangle"></div>
@@ -662,7 +812,7 @@ input:checked + .load_slider:before {
         </div>
       </div>
 
-      <div class="switchesContainer">  
+      <div class="switchesContainer">
         <div class="lights"></div>
         <div class="switches"></div>
         <div class="bottom-lights"></div>
@@ -670,305 +820,390 @@ input:checked + .load_slider:before {
       <div class="rotary-panel">
         <div class="center-bottom"></div>
         <div class="dial">
-            <div class="dial-inner"></div>
-            <div class="dial-center"></div>
-            <div class="number" data-number="1">1</div>
-            <div class="number" data-number="2">2</div>
-            <div class="number" data-number="3">3</div>
-            <div class="number" data-number="4">4</div>
-            <div class="number" data-number="5">5</div>
-            <div class="number" data-number="6">6</div>
-            <div class="number" data-number="7">7</div>
-            <div class="number" data-number="8">8</div>
-            <div class="number" data-number="9">9</div>
-            <div class="number" data-number="0">0</div>
+          <div class="dial-inner"></div>
+          <div class="dial-center"></div>
+          <div class="number" data-number="1">1</div>
+          <div class="number" data-number="2">2</div>
+          <div class="number" data-number="3">3</div>
+          <div class="number" data-number="4">4</div>
+          <div class="number" data-number="5">5</div>
+          <div class="number" data-number="6">6</div>
+          <div class="number" data-number="7">7</div>
+          <div class="number" data-number="8">8</div>
+          <div class="number" data-number="9">9</div>
+          <div class="number" data-number="0">0</div>
         </div>
-      </div> 
-    </div>
-   
-    <div class="rectangle small right" id="gridContainer">
-      
-
       </div>
-      
+    </div>
+
+    <div class="rectangle small right" id="gridContainer">
+
+
+    </div>
+
   </div>
-<script src="interpreter.js"></script>
-<script>
+  <script src="interpreter.js"></script>
+  <script>
+    document.onselectstart = new Function("return false");
 
-let bRegisterShown = 0;
-let cRegisterShown = 0;
+    let bRegisterShown = 0;
+    let cRegisterShown = 0;
 
-function updateBregisterLights() {
-  const topLightsVal = solidac.registers.b[bRegisterShown].number;
-  for (let i = 1; i <= 11; i++) {
-    if ((topLightsVal >>> (i - 1)) & 1) {
-      document.getElementById(`register-light-${12 - i}`).setAttribute('data-lit', 'true');
-    } else {
-      document.getElementById(`register-light-${12 - i}`).removeAttribute('data-lit');
+    function updateBregisterLights() {
+      const topLightsVal = solidac.registers.b[bRegisterShown].number;
+      for (let i = 1; i <= 11; i++) {
+        if ((topLightsVal >>> (i - 1)) & 1) {
+          document.getElementById(`register-light-${12 - i}`).setAttribute('data-lit', 'true');
+        } else {
+          document.getElementById(`register-light-${12 - i}`).removeAttribute('data-lit');
+        }
+      }
     }
-  }
-}
 
-function updateCregisterLights() {
-  const regName = {0: 'm', 1: 'l', 2: 'd', 3: 's', 4: 'c', 5: 'v'}[cRegisterShown];
-  const middleLightsVal = solidac.registers[regName].number;
-  for (let i = 1; i <= 20; i++) {
-    if ((middleLightsVal >>> (i - 1)) & 1) {
-      document.getElementById(`light-${21 - i}`).setAttribute('data-lit', 'true');
-    } else {
-      document.getElementById(`light-${21 - i}`).removeAttribute('data-lit');
+    function updateCregisterLights() {
+      const regName = { 0: 'm', 1: 'l', 2: 'd', 3: 's', 4: 'c', 5: 'v' }[cRegisterShown];
+      const middleLightsVal = solidac.registers[regName].number;
+      for (let i = 1; i <= 20; i++) {
+        if ((middleLightsVal >>> (i - 1)) & 1) {
+          document.getElementById(`light-${21 - i}`).setAttribute('data-lit', 'true');
+        } else {
+          document.getElementById(`light-${21 - i}`).removeAttribute('data-lit');
+        }
+      }
     }
-  }
-}
 
-let solidac = new SOLIDAC();
-solidac.setPostOrderHook(function () {
-  updateBregisterLights();
-  updateCregisterLights();
-});
+    let solidac = new SOLIDAC();
+    solidac.setPostOrderHook(function () {
+      updateBregisterLights();
+      updateCregisterLights();
+    });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const lightsContainer = document.querySelector('.lights');
-  const switchesContainer = document.querySelector('.switches');
-  const bottomLightsContainer = document.querySelector('.bottom-lights');
+    document.addEventListener('DOMContentLoaded', function () {
+      const lightsContainer = document.querySelector('.lights');
+      const switchesContainer = document.querySelector('.switches');
+      const bottomLightsContainer = document.querySelector('.bottom-lights');
 
 
-  for (let i = 1; i <= 20; i++) {
+      for (let i = 1; i <= 20; i++) {
 
-    const light = document.createElement('div');
-    light.id = `light-${i}`;
-    light.className = 'light';
-    lightsContainer.appendChild(light);
+        const light = document.createElement('div');
+        light.id = `light-${i}`;
+        light.className = 'light';
+        lightsContainer.appendChild(light);
 
-    const sw = document.createElement('div');
-    sw.className = 'switch';
-    switchesContainer.appendChild(sw);
+        const sw = document.createElement('div');
+        sw.className = 'switch';
+        switchesContainer.appendChild(sw);
 
-    const slider = document.createElement('div');
-    slider.className = 'slider';
-    slider.style.top = '1px';
-    sw.appendChild(slider);
+        const slider = document.createElement('div');
+        slider.className = 'slider';
+        slider.style.top = '1px';
+        sw.appendChild(slider);
 
-        
-    sw.addEventListener('click', function () {
-      if (slider.style.top === '1px') {
-      slider.style.top = '19px'; 
-      slider.style.left = '3px';
-    } else {
-        slider.style.top = '1px'; 
-        slider.style.left = '3px';
+
+        sw.addEventListener('click', function () {
+          if (slider.style.top === '1px') {
+            slider.style.top = '19px';
+            slider.style.left = '3px';
+          } else {
+            slider.style.top = '1px';
+            slider.style.left = '3px';
+          }
+        });
       }
     });
-  }   
-});
 
-const comments = [
-  "IS", "GO", "SS", "OST", "WAIT",
-  "ABS", "IO", "OS", "TOF", "POF", "OR"
-];
-const commentsContainer = document.getElementById('comments-container');
-const lightsContainer = document.getElementById('lights-container');
+    const comments = [
+      "IS", "GO", "SS", "OST", "WAIT",
+      "ABS", "IO", "OS", "TOF", "POF", "OR"
+    ];
+    const commentsContainer = document.getElementById('comments-container');
+    const lightsContainer = document.getElementById('lights-container');
 
-for (let i = 0; i < comments.length; i++) {
-  const comment = document.createElement('div');
-  comment.className = 'comment';
-  comment.innerText = comments[i];
-  commentsContainer.appendChild(comment);
-  const light = document.createElement('div');
-  light.className = 'operation-light';
-  lightsContainer.appendChild(light);
-}
+    for (let i = 0; i < comments.length; i++) {
+      const comment = document.createElement('div');
+      comment.className = 'comment';
+      comment.innerText = comments[i];
+      commentsContainer.appendChild(comment);
+      const light = document.createElement('div');
+      light.className = 'operation-light';
+      lightsContainer.appendChild(light);
+    }
 
-document.addEventListener('DOMContentLoaded', function () {
-  const lightsContainer = document.querySelector('.register-lights');
+    document.addEventListener('DOMContentLoaded', function () {
+      const lightsContainer = document.querySelector('.register-lights');
 
 
-  for (let i = 1; i <= 11; i++) {
-  const light = document.createElement('div');
-  light.id = `register-light-${i}`;
-  light.className = 'register-light';
-  lightsContainer.appendChild(light);
-  }
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-  const switchesContainer = document.getElementById('switches-container');
-
-  for (let i = 0; i < 4; i++) {      
-    const switchBottom = document.createElement('div');
-    switchBottom.className = 'switch_bottom';
-       
-    const sliderBottom = document.createElement('div');
-    sliderBottom.className = 'slider_bottom';
-    switchBottom.appendChild(sliderBottom);
-    sliderBottom.style.top = '1px'; 
-    sliderBottom.style.left = '3px'; 
-
-    switchBottom.addEventListener('click', function () {
-      sliderBottom.style.top = sliderBottom.style.top === '1px' ? '13px' : '1px';
+      for (let i = 1; i <= 11; i++) {
+        const light = document.createElement('div');
+        light.id = `register-light-${i}`;
+        light.className = 'register-light';
+        lightsContainer.appendChild(light);
+      }
     });
 
-    switchesContainer.appendChild(switchBottom);
-  }
-});
+    document.addEventListener('DOMContentLoaded', function () {
+      const switchesContainer = document.getElementById('switches-container');
 
+      for (let i = 0; i < 4; i++) {
+        const switchBottom = document.createElement('div');
+        switchBottom.className = 'switch_bottom';
 
-document.addEventListener('DOMContentLoaded', function () {
-  const rotateButton = document.getElementById('rotate-button');
-  let angle = 0;
+        const sliderBottom = document.createElement('div');
+        sliderBottom.className = 'slider_bottom';
+        switchBottom.appendChild(sliderBottom);
+        sliderBottom.style.top = '1px';
+        sliderBottom.style.left = '3px';
 
-  rotateButton.addEventListener('click', function () {
-    angle += 45;
-    angle = angle % 360;
-    rotateButton.style.transform = `rotate(${angle}deg)`;
-    bRegisterShown = (bRegisterShown + 1) % 8;
-    updateBregisterLights();
-  });
-});
+        switchBottom.addEventListener('click', function () {
+          sliderBottom.style.top = sliderBottom.style.top === '1px' ? '13px' : '1px';
+        });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const rotateButton2 = document.getElementById('rotate-button2');
-  let angle = 0;
-
-  rotateButton2.addEventListener('click', function () {
-    angle += 60; 
-    angle = angle % 360;
-    rotateButton2.style.transform = `rotate(${angle}deg)`;
-    cRegisterShown = (cRegisterShown + 1) % 6;
-    updateCregisterLights();
-  });
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-  const rotateButton3 = document.getElementById('rotate-button3');
-  let angle = 45;
-
-  rotateButton3.addEventListener('click', function () {
-    angle += 45; 
-    rotateButton3.style.transform = `rotate(${angle}deg)`;
-  });
-});
-
-  
-const numberAngles = {
-  "1": 130,    
-  "2": 160,   
-  "3": 190,
-  "4": 210,  
-  "5": 250,
-  "6": 280,
-  "7": 310,
-  "8": 340,
-  "9": 370,
-  "0": 400,
-};
-    
-document.querySelectorAll('.number').forEach(number => {
-  number.addEventListener('click', function() {
-  rotateDialToNumber(this.dataset.number);
-  });
-});
-    
-function rotateDialToNumber(number) {
-  const targetAngle = numberAngles[number];
-  const dial = document.querySelector('.dial');
-  dial.style.transform = `rotate(-${targetAngle}deg)`;
-  setTimeout(() => {
-    dial.style.transform = 'rotate(0deg)';
-  }, 2000);
-}
-
-
-document.addEventListener('DOMContentLoaded', (event) => {
-  const gridContainer = document.getElementById('gridContainer');
-  gridContainer.appendChild(createDescriptionRow(["INPUT", "1", "3", "5"]));
-  const buttonNames = [
-    "G", "G","G",
-    "R", "R","R",
-    "G", "G","G",
-    "R", "R","R",
-    "R", "R","R",
-    " ",  " ", " ",
-  ];
-  const explanations = ["TAPE READY", "TAPE JAMMED", "TAPE READY", "TAPE JAMMED", "NOPE TAPE", "NOPE OVERIDE"];
-
-  
-  for (let row = 0; row < 6; row++) {
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'row';
-    const explanationDiv = document.createElement('div');
-    explanationDiv.className = 'explanation';
-    explanationDiv.innerText = explanations[row];
-    rowDiv.appendChild(explanationDiv);
-    
-    for (let button = 0; button < 3; button++) { 
-      const buttonIndex = row * 3 + button;
-      const buttonDiv = document.createElement('button');
-      buttonDiv.innerText = buttonNames[buttonIndex];
-      buttonDiv.className = 'button';
-      rowDiv.appendChild(buttonDiv);
-    }
-
-    gridContainer.appendChild(rowDiv);
-    if (row === 1) {
-      gridContainer.appendChild(createDescriptionRow(["OUTPUT", "2", "4", "6"]));
-    }
-  }
-  function createDescriptionRow(contents) {
-    const descriptionRow = document.createElement('div');
-    descriptionRow.className = 'description-row';
-    contents.forEach(content => {
-      const cell = document.createElement('div');
-      cell.className = 'description-cell';
-      cell.innerText = content;
-      descriptionRow.appendChild(cell);
+        switchesContainer.appendChild(switchBottom);
+      }
     });
-    return descriptionRow;
- }
-});
-
-    
 
 
-function updateClock() {
-  const now = new Date();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
-  
-  const hoursAngle = (hours % 12) * 30 + minutes * 0.5; 
-  const minutesAngle = minutes * 6; 
-  const secondsAngle = seconds * 6;
-  const hourHand = document.getElementById('hourHand');
-  const minuteHand = document.getElementById('minuteHand');
-  const secondHand = document.getElementById('secondHand');
+    document.addEventListener('DOMContentLoaded', function () {
+      const rotateButton = document.getElementById('rotate-button');
+      let currentAngle = 0;
+      let increment = 25.714;
+      let direction = 1;
 
-  hourHand.style.transform = `translate(-50%, 0) rotate(${hoursAngle}deg)`;
-  minuteHand.style.transform = `translate(-50%, 0) rotate(${minutesAngle}deg)`;
-  secondHand.style.transform = `translate(-50%, 0) rotate(${secondsAngle}deg)`;
-}
+      rotateButton.addEventListener('click', function () {
+        if (currentAngle >= 179) {
+          direction = -1;
+        } else if (currentAngle <= 0) {
+          direction = 1;
+        }
 
-updateClock(); 
-setInterval(updateClock, 1000); 
+        currentAngle += increment * direction;
+        rotateButton.style.transform = `rotate(${currentAngle}deg)`;
+      });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const powerSwitch = document.getElementById('power-switch');
-  const slider = powerSwitch.querySelector('.slider');
 
-  switchBottom.addEventListener('click', function () {
-      sliderBottom.style.top = sliderBottom.style.top === '1px' ? '13px' : '1px';
-  });
-});
 
-document.getElementById('toggle').addEventListener('change', function() {
-  var statusText = document.getElementById('statusText');
-  if (this.checked) {
-    statusText.style.display = 'block';
-  } else {
-      statusText.style.display = 'none';
+      const rotateButton2 = document.getElementById('rotate-button2');
+      let currentAngle2 = 0;
+      let increment2 = 30;
+      let direction2 = 1;
+
+      rotateButton2.addEventListener('click', function () {
+        if (currentAngle2 >= 180) {
+          direction2 = -1;
+        } else if (currentAngle2 <= 0) {
+          direction = 1;
+        }
+
+        currentAngle2 += increment2 * direction2;
+        rotateButton2.style.transform = `rotate(${currentAngle2}deg)`;
+
+      });
+
+
+      const rotateButton3 = document.getElementById('rotate-button3');
+      let currentAngle3 = 0;
+      let increment3 = 60;
+      let direction3 = 1;
+
+
+      rotateButton3.addEventListener('click', function () {
+        if (currentAngle3 >= 180) {
+          direction3 = -1;
+        } else if (currentAngle2 <= 0) {
+          direction = 1;
+        }
+
+        currentAngle3 += increment3 * direction3;
+        rotateButton3.style.transform = `rotate(${currentAngle3}deg)`;
+
+      });
+    });
+
+
+    const numberAngles = {
+      "1": 130,
+      "2": 160,
+      "3": 190,
+      "4": 210,
+      "5": 250,
+      "6": 280,
+      "7": 310,
+      "8": 340,
+      "9": 370,
+      "0": 400,
+    };
+
+    document.querySelectorAll('.number').forEach(number => {
+      number.addEventListener('click', function () {
+        rotateDialToNumber(this.dataset.number);
+      });
+    });
+
+    function rotateDialToNumber(number) {
+      const targetAngle = numberAngles[number];
+      const dial = document.querySelector('.dial');
+      dial.style.transform = `rotate(-${targetAngle}deg)`;
+      setTimeout(() => {
+        dial.style.transform = 'rotate(0deg)';
+      }, 2000);
     }
-});
-</script>
+
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const gridContainer = document.getElementById('gridContainer');
+      gridContainer.appendChild(createDescriptionRow(["INPUT", "1", "3", "5"]));
+      const buttonNames = [
+        "G", "G", "G",
+        "R", "R", "R",
+        "G", "G", "G",
+        "R", "R", "R",
+        "R", "R", "R",
+        " ", " ", " ",
+      ];
+      const explanations = ["TAPE READY", "TAPE JAMMED", "TAPE READY", "TAPE JAMMED", "NOPE TAPE", "NOPE OVERIDE"];
+
+
+      for (let row = 0; row < 6; row++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'row';
+        const explanationDiv = document.createElement('div');
+        explanationDiv.className = 'explanation';
+        explanationDiv.innerText = explanations[row];
+        rowDiv.appendChild(explanationDiv);
+
+        for (let button = 0; button < 3; button++) {
+          const buttonIndex = row * 3 + button;
+          const buttonDiv = document.createElement('button');
+          buttonDiv.innerText = buttonNames[buttonIndex];
+          buttonDiv.className = 'button';
+          rowDiv.appendChild(buttonDiv);
+        }
+
+        gridContainer.appendChild(rowDiv);
+        if (row === 1) {
+          gridContainer.appendChild(createDescriptionRow(["OUTPUT", "2", "4", "6"]));
+        }
+      }
+      function createDescriptionRow(contents) {
+        const descriptionRow = document.createElement('div');
+        descriptionRow.className = 'description-row';
+        contents.forEach(content => {
+          const cell = document.createElement('div');
+          cell.className = 'description-cell';
+          cell.innerText = content;
+          descriptionRow.appendChild(cell);
+        });
+        return descriptionRow;
+      }
+    });
+
+
+
+
+    function updateClock() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+
+      const hoursAngle = (hours % 12) * 30 + minutes * 0.5;
+      const minutesAngle = minutes * 6;
+      const secondsAngle = seconds * 6;
+      const hourHand = document.getElementById('hourHand');
+      const minuteHand = document.getElementById('minuteHand');
+      const secondHand = document.getElementById('secondHand');
+
+      hourHand.style.transform = `translate(-50%, 0) rotate(${hoursAngle}deg)`;
+      minuteHand.style.transform = `translate(-50%, 0) rotate(${minutesAngle}deg)`;
+      secondHand.style.transform = `translate(-50%, 0) rotate(${secondsAngle}deg)`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const powerSwitch = document.getElementById('power-switch');
+      const slider = powerSwitch.querySelector('.slider');
+
+      switchBottom.addEventListener('click', function () {
+        sliderBottom.style.top = sliderBottom.style.top === '1px' ? '13px' : '1px';
+      });
+    });
+
+    document.getElementById('toggle').addEventListener('change', function () {
+      var statusText = document.getElementById('statusText');
+      if (this.checked) {
+        statusText.style.display = 'block';
+      } else {
+        statusText.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const dropzone = document.getElementById('dropzone');
+      const opcodeDisplay = document.getElementById('opcodeDisplay');
+
+      dropzone.addEventListener('dragover', function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy';
+        dropzone.classList.add('highlight');
+      });
+
+      dropzone.addEventListener('dragleave', function (event) {
+        dropzone.classList.remove('highlight');
+      });
+
+      dropzone.addEventListener('drop', function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+        dropzone.classList.remove('highlight');
+
+        const file = event.dataTransfer.files[0];
+        if (!file) {
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const content = e.target.result;
+          processFileContent(content);
+        };
+        reader.readAsText(file);
+      });
+
+      function processFileContent(content) {
+        const lines = content.split('\n');
+        for (const line of lines) {
+          if (line.toLowerCase().startsWith('instruction code:')) {
+            const instruction = line.split(':')[1].trim();
+            const opcode = processInstruction(instruction);
+            showOpcode(opcode);
+          }
+        }
+      }
+
+      function processInstruction(instruction) {
+        const instruction_parts = instruction.split(".");
+        let opcode = parseInt(instruction_parts[0]) << 14;
+        if (instruction_parts.length > 1) {
+          opcode |= parseInt(instruction_parts[1]) << 11;
+        }
+        if (instruction_parts.length > 2) {
+          opcode |= parseInt(instruction_parts[2]);
+        }
+        return opcode;
+      }
+
+      function showOpcode(opcode) {
+        opcodeDisplay.innerHTML += 'Opcode: ' + opcode + '<br>';
+        opcodeDisplay.style.opacity = 1;
+        console.log('Opcode:', opcode);
+      }
+    });
+  </script>
 
 </body>
+
 </html>

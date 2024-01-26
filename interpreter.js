@@ -243,6 +243,33 @@ class SOLIDAC{
     this.postOrderHook(this);
   }
   
+  parseTapeInput(tape){
+    for(let i=0; i<Math.min(tape.length, this.store.length); i++){
+      let text = tape[i].split('.');
+      let opcode = ((int(text[0]) & 0b111111) << 14) | ((int(text[1]) & 0b111) << 11) | (int(text[2]) & 0b11111111111);
+      this.store[i].assign({number:opcode,size:20});
+    }
+  }
+  
+  parseOrderFromWord(word){
+    let f = (word >>> 14) & 0b111111;
+    let b = (word >>> 11) & 0b111;
+    let n = word & 0b11111111111;
+    return new Order(f, b, n);
+  }
+  
+  executeNextOrder(){
+    let c = this.registers.c.toNumber();
+    
+    if (c < 0 || c >= this.store.length){
+      // TODO stop
+      console.log("Invalid store location in C-register");
+      return;
+    }
+
+    executeOrder(parseOrderFromWord(this.store[c].number));
+  }
+  
   getAccumulator(){
     let acc = new MachineWord(39, false);
     acc.number = ((this.registers.m.number << 19) & 0b11111111111111111111) | (this.registers.l.number & 0b1111111111111111111);
