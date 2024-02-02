@@ -1,119 +1,86 @@
+function interpretAsSigned(n, bits) {
+  let isNegative = (n >>> (bits - 1)) & 0b1;
+
+  if (isNegative) return n | (((~0) >>> bits) << bits);
+  else return (n << (32 - bits)) >>> (32 - bits);
+}
+
+function interpretAsUnsigned(n, bits) {
+  return (n << (32 - bits)) >>> (32 - bits);
+}
+
 class MachineWord {
-  constructor(size,hasOverflowDigit = true,hasSignDigit = true) {
+  constructor(size, hasOverflowDigit = true, hasSignDigit = true) {
     this.number = 0;
     this.size = size;
-    this.hasOverflowDigit=hasOverflowDigit;
-    this.hasSignDigit=hasSignDigit;
+    this.hasOverflowDigit = hasOverflowDigit;
+    this.hasSignDigit = hasSignDigit;
   }
 
-  assign(other, size=0) {
-    let movableDigits = size?Math.min(size,other.size):other.size;
+  add(other) {
+    this.limitSize();
+
+    if (Number.isInteger(other)) this.number += other;
+    else this.number += other.toNumber();
+
+    this.limitSize();
+  }
+
+  and(other) {
+    this.limitSize();
+
+    if (Number.isInteger(other)) this.number &= other;
+    else this.number &= other.number;
+
+    this.limitSize();
+  }
+
+  assign(other, size = 0) {
+    let movableDigits = size ? Math.min(size, other.size) : other.size;
     let discardedDigits = 32 - movableDigits;
 
     this.limitSize();
 
-    this.number = ((this.number>>>movableDigits)<<movableDigits)|(other.number<<discardedDigits)>>>discardedDigits;
+    this.number = ((this.number >>> movableDigits) << movableDigits) | (other.number << discardedDigits) >>> discardedDigits;
 
     this.limitSize();
   }
   
-  clear(){
+  clear() {
     this.number = 0;
   }
 
-  limitSize(){
-    let discardedDigits=32-this.size;
-    this.number=(this.number<<discardedDigits)>>>discardedDigits;
+  limitSize() {
+    let discardedDigits = 32 - this.size;
+    this.number = (this.number << discardedDigits) >>> discardedDigits;
   }
 
-  toNumber() {
-    if(this.hasSignDigit){
-      let discardedDigits=32-this.size;
-      let i=this.hasOverflowDigit;
-
-      let negative=(this.number<<(discardedDigits+i))>>>(this.size+discardedDigits-1);
-      
-      if (negative){
-        return this.number | (((~0)>>>(this.size-i-1))<<(this.size-i-1));
-      }
-      else{
-  // @jsinger - check this calculation - it might be wrong    
-  //fixed
-        return(this.number<<(discardedDigits+i))>>>(discardedDigits+i);
-      }
-    }
-    else{
-      return this.number;
-    }
+  subtract(other) {
+    if (Number.isInteger(other)) this.add(-other);
+    else this.add(-other.toNumber());
   }
 
-  add(other){
-    this.limitSize();
-
-    if (Number.isInteger(other)){
-      this.number += other;
-    } else {
-      this.number +=other.toNumber();
-    }
-
-    this.limitSize();
-  }
-  
-  subtract(other){
-    this.limitSize();
-
-    if (Number.isInteger(other)){
-      this.number -= other;
-    }else {
-      this.number-=other.toNumber();
-    }
-
-    let negative =this.number<0;
-
-    this.limitSize();
-
-    //Negative as a restult of subtratcion, not over flow
-    if(negative&&this.hasSignDigit){
-      let i=1;
-
-      if(this.hasOverflowDigit){
-        //Set overflow digit to 0          
-        this.number  = this.number&~(1<<(this.size-i));          
-        i++
-      }
-
-      //Set sign sigit to 1
-      //The remainder is already 2's complement
-      this.number=this.number|(1<<(this.size-i));
-    }
-  }
-  
-  and(other){
-    this.limitSize();
-
-    if (Number.isInteger(other)){
-      this.number=this.number&other;
-    }else{
-      this.number=this.number&other.number;
-    }
-
-    this.limitSize();
-  }
-
-  swap(other){
-    let t=other.number;
+  swap(other) {
+    let t = other.number;
 
     other.assign(this);
 
-    this.assign({number:t,s:other.size});
+    this.assign({number: t, s: other.size});
+  }
+
+  toNumber(signed = null) {
+    if (signed === null) signed = this.hasSignDigit;
+
+    if (signed) return interpretAsSigned(this.number, this.size - this.hasOverflowDigit);
+    else return interpretAsUnsigned(this.number, this.size);
   }
 }
 
 class Order {
   constructor(f, b, n) {
-    this.f=f; //Function number
-    this.b=b; //B-register index
-    this.n=n; //Storage location
+    this.f = f; //Function number
+    this.b = b; //B-register index
+    this.n = n; //Storage location
   }
 }
 
@@ -182,7 +149,7 @@ class Tape {
     if (this.location >= this.content.length) {
       return 0;
     } else {
-      return this.content[this.locatin++];
+      return this.content[this.location++];
     }
   }
 }
@@ -283,9 +250,17 @@ class SOLIDAC {
     this.wordFromOrder(40, 0, 98),    // 91  s[98] = m; m = l = 0
     this.wordFromOrder( 2, 2, 98),    // 92  b[2] = s[98]
     this.wordFromOrder(13, 2, 4),     // 93  if (b[2] != 0) goto 4
-    this.wordFromOrder(15, 1, 21),    // 94  
-    this.wordFromOrder(26, 0, 36)     // 95
+    this.wordFromOrder(15, 1, 21),    // 94  b[1] -= 2; if (b[1] != 0) goto 21
+    this.wordFromOrder(26, 0, 36)     // 95  goto 36
   ];
+
+  static stopReasons = {
+    absolute: Symbol('absolute stop'),
+    normal: Symbol('normal stop'),
+    overshiftAfterNormalising: Symbol('overshift after normalising'),
+    recoverableOverflow: Symbol('overflow in the D- or M- registers'),
+    irrecoverableOverflow: Symbol('overflow in the S-register or in the M-register with an arithmetical left shift')
+  };
   
   static wordFromOrder(...args) {
     let f, b, n;
@@ -304,7 +279,7 @@ class SOLIDAC {
   }
 
   constructor() {
-    this.counter = new MachineWord(11);
+    this.counter = new MachineWord(11, false, false);
     this.currentModifier = null;
 
     this.registers = {
@@ -318,14 +293,17 @@ class SOLIDAC {
       v: new MachineWord(21), //The inspection register
     }
 
-    this.mainStore = Array.from({length: 512}, () => new MachineWord(20, false));
     this.currentReadingStore = this.constructor.initialOrderStore;
-    this.tape = [];
+    this.mainStore = Array.from({length: 512}, () => new MachineWord(20, false));
+    
+    this.stopReason = null;
+    this.overflowed = false;
+    this.underflowed = false;
 
+    this.optionalStopEnabled = false;
+    this.slowMode = false;
     this.singleShot = false;
-    this.stopped = false;
-    this.overflown = false;
-    this.underflown = false;
+    this.tape = [];
 
     this.outputHook = function () {};
     this.postOrderHook = function () {};
@@ -334,15 +312,16 @@ class SOLIDAC {
 
   initialSet() {
     this.counter.clear();
-    this,registers.m.clear();
-    this,registers.l.clear();
-    this,registers.d.clear();
-    this,registers.s.clear();
-    this,registers.c.clear();
-    this,registers.v.clear();
-    this.stopped = false;
-    this.overflown = false;
-    this.underflown = false;
+    this.registers.m.clear();
+    this.registers.l.clear();
+    this.registers.d.clear();
+    this.registers.s.clear();
+    this.registers.c.clear();
+    this.registers.v.clear();
+    this.stopReason = null;
+    this.overflowed = false;
+    this.underflowed = false;
+    this.currentReadingStore = this.constructor.initialOrderStore;
   }
   
   setTape(tape) {
@@ -350,9 +329,25 @@ class SOLIDAC {
   }
 
   executeOrder(order) {
-    const {f, b, n} = order;
+    let {f, b, n} = order;
+    
+    const lastStopReason = this.stopReason;
+    const lastOverflowed = this.overflowed;
+    const lastUnderflowed = this.underflowed;
 
-    switch(f){
+    this.stopReason = null;
+    this.overflowed = false;
+    this.underflowed = false;
+    
+    const restoreStatusIndicators = () => {
+      if (lastStopReason !== null && this.stopReason == this.constructor.stopReasons.normal) {
+        this.stopReason = lastStopReason;
+      }
+      this.overflowed = lastOverflowed;
+      this.underflowed = lastUnderflowed;
+    };
+
+    switch (f) {
       case 1:
         this.writeStore(n, this.registers.b[b]);
         break;
@@ -360,13 +355,13 @@ class SOLIDAC {
         this.registers.b[b].assign(this.readStore(n));
         break;
       case 3:
-        this.registers.b[b].subtract(this.readStore(n));
+        this.registers.b[b].add(this.readStore(n));
         break;
       case 4:
         this.registers.b[b].subtract(this.readStore(n));
         break;
       case 5:
-        this.registers.b[b].assign({number:n,size:11});
+        this.registers.b[b].assign({number: n, size: 11});
         break;
       case 6:
         this.registers.b[b].add(n);
@@ -375,193 +370,305 @@ class SOLIDAC {
         this.registers.b[b].subtract(n);
         break;
       case 8:
-        this.registers.b[b].and({number:n,size:11});
+        this.registers.b[b].and({number: n, size: 11});
         break;
       case 9:
         this.writeStore(n, this.registers.b[b], 'swap');
         break;
       case 10:
         const tapeInput = this.tape.read();
-        this.registers.b[b].assign({number:tapeInput,size:11});
-        this.writeStore(n, {number:tapeInput,size:20});
+        this.registers.b[b].assign({number: tapeInput, size: 11});
+        this.writeStore(n, {number: tapeInput, size: 20});
         break;
       case 12:
-        if(this.registers.b[b].toNumber() > 0){
-          this.registers.c.assign({number:n,size:11});
-        }
+        if (this.registers.b[b].toNumber() > 0) this.counter.assign({number: n, size: 11});
         break;
       case 13:
-        if(this.registers.b[b].toNumber() != 0){
-          this.registers.c.assign({number:n,size:11});
-        }
+        if (this.registers.b[b].toNumber() != 0) this.counter.assign({number: n, size: 11});
         break;
       case 14:
         this.registers.b[b].subtract(1);
-        if(this.registers.b[b].toNumber() != 0){
-          this.registers.c.assign({number:n,size:11});
-        }
+        if (this.registers.b[b].toNumber() != 0) this.counter.assign({number: n, size: 11});
         break;
       case 15:
         this.registers.b[b].subtract(2);
-        if(this.registers.b[b].toNumber() != 0){
-          this.registers.c.assign({number:n,size:11});
-        }
+        if (this.registers.b[b].toNumber() != 0) this.counter.assign({number: n, size: 11});
         break;
       case 16:
-        n = applyModifier(b, n);
+        n = this.applyModifier(b, n);
         this.currentModifier = new MachineWord(11, false, false);
         this.currentModifier.number = n & 0b11111111111;
+        restoreStatusIndicators();
         break;
       case 17:
-        n = applyModifier(b, n);
+        n = this.applyModifier(b, n);
         this.currentModifier = this.readStore(n);
+        restoreStatusIndicators();
         break;
       case 20:
-        n = applyModifier(b, n);
+        n = this.applyModifier(b, n);
         this.outputHook(this.readStore(n).toNumber());
         break;
       case 21:
-        n = applyModifier(b, n);
-        if(this.getAccumulator().toNumber() < 0){
-          this.registers.c.assign({number:n,size:11});
-        }
+        n = this.applyModifier(b, n);
+        if (this.getAccumulator() < 0) this.counter.assign({number: n, size: 11});
         break;
       case 22:
-        n = applyModifier(b, n);
-        if(this.getAccumulator().toNumber() > 0){
-          this.registers.c.assign({number:n,size:11});
-        }
+        n = this.applyModifier(b, n);
+        if (this.getAccumulator() > 0) this.counter.assign({number: n, size: 11});
         break;
       case 23:
-        n = applyModifier(b, n);
-        if(this.getAccumulator().toNumber() != 0){
-          this.registers.c.assign({number:n,size:11});
-        }
+        n = this.applyModifier(b, n);
+        if (this.getAccumulator() != 0) this.counter.assign({number: n, size: 11});
         break;
       case 24:
-        n = applyModifier(b, n);
-        if(this.underflown){
-          this.registers.c.assign({number:n,size:11});
-        }
+        n = this.applyModifier(b, n);
+        if (lastUnderflowed) this.counter.assign({number: n, size: 11});
         break;
       case 25:
-        n = applyModifier(b, n);
-        if(this.overflown){
-          this.registers.c.assign({number:n,size:11});
-        }
+        n = this.applyModifier(b, n);
+        if (lastOverflowed) this.counter.assign({number: n, size: 11});
         break;
       case 26:
-        n = applyModifier(b, n);
-        this.registers.c.assign({number:n,size:11});
+        n = this.applyModifier(b, n);
+        this.counter.assign({number: n, size: 11});
         break;
       case 27:
-        n = applyModifier(b, n);
-        this.registers.c.assign({number:n,size:11});
-        if (Object.is(this.currentReadingStore, this.store)) {
-          this.currentReadingStore = this.constructor.initialOrderStore;
-        } else {
-          this.currentReadingStore = this.store;
-        }
+        n = this.applyModifier(b, n);
+        this.counter.assign({number: n, size: 11});
+        if (Object.is(this.currentReadingStore, this.mainStore)) this.currentReadingStore = this.constructor.initialOrderStore;
+        else this.currentReadingStore = this.mainStore;
         break;
       case 28:
-        // TODO
+        // TODO Figure how wire input/output works
         break;
       case 29:
-        // TODO
+        // TODO Figure how wire output works
         break;
       case 31:
-        n = applyModifier(b, n);
-        this.writeStore(n, {number:this.register.l.number,size:20});
+        n = this.applyModifier(b, n);
+        this.writeStore(n, {number: this.registers.l.number, size: 20});
         break;
       case 32:
-        n = applyModifier(b, n);
+        n = this.applyModifier(b, n);
         var s = this.readStore(n);
         var signBit = s.toNumber() < 0;
-        this.register.l.assign(s);
-        this.register.m.assign({number:signBit?~0:0,size:20});
+        this.registers.l.assign(s);
+        this.registers.m.assign({number: signBit ? ~0 : 0, size: 20});
         break;
       case 33:
-        var s = readStore(n);
+        n = this.applyModifier(b, n);
+        var s = this.readStore(n);
         var signBit = s.toNumber() < 0;
-        var lowSum = this.register.l.number + (s.number & 0b1111111111111111111);
+        var lowSum = this.registers.l.number + (s.number & 0b1111111111111111111);
         var carry = lowSum >>> 19;
-        var previousHighNumber = this.register.m.toNumber();
-        var highSum = this.register.m.number + signBit + carry;
-        var overflow = previousHighNumber > 0 && this.register.m.toNumber() < 0;
-        this.register.l.number = lowSum & 0b1111111111111111111;
-        this.register.m.number = highSum & 0b111111111111111111111;
-        this.overflown = overflow;
+        var previousHighNumber = this.registers.m.toNumber();
+        var highSum = this.registers.m.number + signBit + carry;
+        this.registers.l.number = lowSum & 0b1111111111111111111;
+        this.registers.m.number = highSum & 0b111111111111111111111;
+        this.overflowed = previousHighNumber >= 0 && this.registers.m.toNumber() < 0;
         break;
       case 34:
-        var s = readStore(n);
+        n = this.applyModifier(b, n);
+        var s = this.readStore(n);
         var signBit = s.toNumber() < 0;
-        var lowDiff = this.register.l.number - (s.number & 0b1111111111111111111);
+        var lowDiff = this.registers.l.number - (s.number & 0b1111111111111111111);
         var carry = lowDiff < 0;
-        var previousHighNumber = this.register.m.toNumber();
-        var highDiff = this.register.m.number - signBit - carry;
-        var underflow = previousHighNumber < 0 && this.register.m.toNumber() > 0;
-        this.register.l.number = lowSum & 0b1111111111111111111;
-        this.register.m.number = highSum & 0b111111111111111111111;
-        this.underflown = underflow;
+        var previousHighNumber = this.registers.m.toNumber();
+        var highDiff = this.registers.m.number - signBit - carry;
+        this.registers.l.number = lowDiff & 0b1111111111111111111;
+        this.registers.m.number = highDiff & 0b111111111111111111111;
+        this.underflowed = previousHighNumber < 0 && this.registers.m.toNumber() >= 0;
       case 35:
-        // TODO
+        // TODO Normalisation
         break;
       case 36:
+        n = this.applyModifier(b, n);
+        n = interpretAsSigned(n, 11);
+        if (n >= 0) this.arithmeticLeftShiftAccumulator(n);
+        else this.arithmeticRightShiftAccumulator(-n);
+        break;
       case 37:
+        n = this.applyModifier(b, n);
+        n = interpretAsSigned(n, 11);
+        if (n >= 0) this.arithmeticRightShiftAccumulator(n);
+        else this.arithmeticLeftShiftAccumulator(-n);
+        break;
       case 38:
+        n = this.applyModifier(b, n);
+        n = interpretAsSigned(n, 11);
+        if (n >= 0) this.logicLeftShiftAccumulator(n);
+        else this.logicRightShiftAccumulator(-n);
+        break;
       case 39:
+        n = this.applyModifier(b, n);
+        n = interpretAsSigned(n, 11);
+        if (n >= 0) this.logicRightShiftAccumulator(n);
+        else this.logicLeftShiftAccumulator(-n);
         break;
       default:
-        // TODO: function number is invalid
+        this.stopReason = this.constructor.stopReasons.absolute;
+        break;
       case 0:
-        // TODO: b == 0, n == 0: absoulte; b == 0, n > 0: normal; b != 0: optional
-        this.stopped = true;
-        this.stoppedHook();
-        break;            
+        if (b == 0 && n == 0) this.stopReason = this.constructor.stopReasons.absolute;
+        else if (b == 0) this.stopReason = this.constructor.stopReasons.normal; 
+        else if (this.optionalStopEnabled) this.stopReason = this.constructor.stopReasons.normal;
+        restoreStatusIndicators();
+        break;
     }
 
     this.postOrderHook(this);
   }
-  
-  applyModifier(b, n) {
-    if (b != 0) return (this.register.b[order.b].number + order.n) & 0b11111111111;
-    return n;
-  }
 
-  parseOrderFromWord(word){
-    let f = (word >>> 14) & 0b111111;
-    let b = (word >>> 11) & 0b111;
-    let n = word & 0b11111111111;
-    return new Order(f, b, n);
-  }
-  
-  executeNextOrder(){
-    let c = this.registers.c.toNumber();
-    
-    if (c < 0 || c >= this.store.length){
-      // TODO stop
-      console.log("Invalid store location in C-register");
+  arithmeticLeftShiftAccumulator(n) {
+    if (n >= 40) {
+      if (this.registers.m.number != 0 || this.registers.l.number != 0) {
+        this.overflowed = true;
+        this.stopReason = this.constructor.stopReasons.recoverableOverflow;
+      }
+
+      this.registers.m.number = 0;
+      this.registers.l.number = 0;
       return;
     }
 
-    executeOrder(parseOrderFromWord(this.store[c].number));
+    let remainingDigits = Math.max(21 - n, 0);
+    let overshiftPartM = this.registers.m.number >>> remainingDigits;
+    
+    if (n >= 21) this.registers.m.number = 0;
+    else this.registers.m.number = (this.registers.m.number << n) & 0b111111111111111111111;
+    
+    if ((overshiftPartM != 0 || this.registers.m.toNumber() < 0) &&
+        (overshiftPartM != (((~0) & 0b111111111111111111111) >>> remainingDigits) || this.registers.m.toNumber() >= 0)) {
+      this.overflowed = true;
+      this.stopReason = this.constructor.stopReasons.recoverableOverflow;
+    }
+    
+    let overshiftPartL = 0;
+
+    if (n >= 19) {
+      remainingDigits = Math.max(n - 21, 0);
+      overshiftPartM = this.registers.l.number >>> (40 - n);
+      overshiftPartL = (this.registers.l.number << (n - 19)) & 0b111111111111111111111;
+      this.registers.l.number = 0;
+    } else {
+      remainingDigits = 0;
+      overshiftPartM = 0;
+      overshiftPartL = this.registers.l.number >>> (19 - n);
+      this.registers.l.number = (this.registers.l.number << n) & 0b1111111111111111111;
+    }
+
+    this.registers.m.number |= overshiftPartL;
+
+    if ((overshiftPartM != 0 || this.registers.m.toNumber() < 0) &&
+        (overshiftPartM != (((~0) & 0b111111111111111111111) >>> remainingDigits) || this.registers.m.toNumber() >= 0)) {
+      this.overflowed = true;
+      this.stopReason = this.constructor.stopReasons.recoverableOverflow;
+    }
   }
   
-  getAccumulator(){
-    let acc = new MachineWord(40, false);
-    acc.number = (this.registers.m.number << 19) | this.registers.l.number;
-    return acc;
+  arithmeticRightShiftAccumulator(n) {
+    let originalSign = this.registers.m.toNumber() < 0;
+    let fillPattern = originalSign ? ~0 : 0;
+
+    if (n >= 40) {
+      this.registers.m.number = fillPattern & 0b111111111111111111111;
+      this.registers.l.number = fillPattern & 0b1111111111111111111;
+      return;
+    }
+
+    if (n >= 19) {
+      this.registers.l.number = interpretAsSigned(this.registers.m.number, 21) >> (n - 19);
+    } else {
+      this.registers.l.number = (this.registers.l.number >>> n) | this.registers.m.number << (19 - n);
+    }
+    
+    this.registers.l.number &= 0b1111111111111111111;
+
+    if (n >= 21) this.registers.m.number = fillPattern;
+    else this.registers.m.number = interpretAsSigned(this.registers.m.number, 21) >> n;
+    
+    this.registers.m.number &= 0b111111111111111111111;
+  }
+
+  logicLeftShiftAccumulator(n) {
+    if (n >= 40) {
+      this.registers.m.number = 0;
+      this.registers.l.number = 0;
+      return;
+    }
+
+    if (n >= 21) this.registers.m.number = 0;
+    else this.registers.m.number = (this.registers.m.number << n) & 0b111111111111111111111;
+
+    let overshiftPartL = 0;
+
+    if (n >= 19) {
+      overshiftPartL = this.registers.l.number << (n - 19);
+      this.registers.l.number = 0;
+    } else {
+      overshiftPartL = this.registers.l.number >>> (19 - n);
+      this.registers.l.number = (this.registers.l.number << n) & 0b1111111111111111111;
+    }
+
+    this.registers.m.number |= overshiftPartL & 0b111111111111111111111;
+  }
+
+  logicRightShiftAccumulator(n) {
+    if (n >= 40) {
+      this.registers.m.number = 0;
+      this.registers.l.number = 0;
+      return;
+    }
+
+    if (n >= 19) {
+      this.registers.l.number = this.registers.m.number >>> (n - 19);
+    } else {
+      this.registers.l.number = (this.registers.l.number >>> n) | this.registers.m.number << (19 - n);
+    }
+    
+    this.registers.l.number &= 0b1111111111111111111;
+
+    if (n >= 21) this.registers.m.number = 0;
+    else this.registers.m.number = this.registers.m.number >>> n;
+  }
+
+  getAccumulator() {
+    return this.registers.m.toNumber() * Math.pow(2, 19) + this.registers.l.toNumber();
   }
   
+  applyModifier(b, n) {
+    if (b != 0) return (this.registers.b[b].number + order.n) & 0b11111111111;
+    return n;
+  }
+
+  executeNextOrder() {
+    let orderLocation = this.counter.toNumber();
+
+    if (orderLocation >= this.currentReadingStore.length) {
+      this.stopReason = this.constructor.stopReasons.absolute;
+      console.log("Invalid store location in control counter");
+      return;
+    }
+    
+    let s = this.readStore(orderLocation);
+
+    let f = (s.number >>> 14) & 0b111111;
+    let b = (s.number >>> 11) & 0b111;
+    let n = s.number & 0b11111111111;
+
+    this.executeOrder(new Order(f, b, n));
+  }
+
   readStore(n){
     let v = this.currentReadingStore[n];
-    s.assign(v);
+    this.registers.s.assign(v);
     return v;
   }
-  
-  writeStore(n, v, op='assign'){
-    s.assign(v);
-    this.store[n][op](v);
+
+  writeStore(n, v, op = 'assign'){
+    this.registers.s.assign(v);
+    this.mainStore[n][op](v);
   }
 
   setsHooks(postOrder, output, stopped) {
@@ -570,5 +677,3 @@ class SOLIDAC {
     this.stoppedHook = stop;
   }
 }
-
-module.exports = { MachineWord, Order, SOLIDAC };
