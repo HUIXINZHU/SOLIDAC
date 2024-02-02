@@ -846,11 +846,14 @@
   <script>
     document.onselectstart = new Function("return false");
 
-    let bRegisterShown = 0;
+    let bRegisterShown = 1;
     let cRegisterShown = 0;
 
     function updateBregisterLights() {
-      const topLightsVal = solidac.registers.b[bRegisterShown].number;
+      let topLightsVal;
+      if (bRegisterShown == 0) solidac.counter.number
+      else topLightsVal = solidac.registers.b[bRegisterShown].number;
+
       for (let i = 1; i <= 11; i++) {
         if ((topLightsVal >>> (i - 1)) & 1) {
           document.getElementById(`register-light-${12 - i}`).setAttribute('data-lit', 'true');
@@ -873,9 +876,13 @@
     }
 
     let solidac = new SOLIDAC();
-    solidac.setPostOrderHook(function () {
+    solidac.setsHooks(function () {
       updateBregisterLights();
       updateCregisterLights();
+    },
+    console.log,
+    function () {
+      console.log('stopped');
     });
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -979,6 +986,9 @@
 
         currentAngle += increment * direction;
         rotateButton.style.transform = `rotate(${currentAngle}deg)`;
+
+        bRegisterShown = Math.abs(bRegisterShown + direction + 8) % 8;
+        updateBregisterLights();
       });
 
 
@@ -1174,32 +1184,7 @@
       });
 
       function processFileContent(content) {
-        const lines = content.split('\n');
-        for (const line of lines) {
-          if (line.toLowerCase().startsWith('instruction code:')) {
-            const instruction = line.split(':')[1].trim();
-            const opcode = processInstruction(instruction);
-            showOpcode(opcode);
-          }
-        }
-      }
-
-      function processInstruction(instruction) {
-        const instruction_parts = instruction.split(".");
-        let opcode = parseInt(instruction_parts[0]) << 14;
-        if (instruction_parts.length > 1) {
-          opcode |= parseInt(instruction_parts[1]) << 11;
-        }
-        if (instruction_parts.length > 2) {
-          opcode |= parseInt(instruction_parts[2]);
-        }
-        return opcode;
-      }
-
-      function showOpcode(opcode) {
-        opcodeDisplay.innerHTML += 'Opcode: ' + opcode + '<br>';
-        opcodeDisplay.style.opacity = 1;
-        console.log('Opcode:', opcode);
+        solidac.setTape(new Tape(content));
       }
     });
   </script>
