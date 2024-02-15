@@ -745,6 +745,10 @@
     .button-clicked {
       background-color: hsl(245, 39%, 49%);
     }
+    
+    #lights-container {
+      z-index: 10;
+    }
   </style>
 </head>
 
@@ -938,6 +942,7 @@
       commentsContainer.appendChild(comment);
       const light = document.createElement('div');
       light.className = 'operation-light';
+      light.id = 'light-' + comments[i];
       lightsContainer.appendChild(light);
     }
 
@@ -1019,16 +1024,18 @@
 
       const rotateButton3 = document.getElementById('rotate-button3');
       let currentAngle3 = 0;
-      let increment3 = 60;
+      let increment3 = 90;
       let direction3 = 1;
 
 
       rotateButton3.addEventListener('click', function () {
-        if (currentAngle3 >= 180) {
+        if (currentAngle3 >= 90) {
           direction3 = -1;
         } else if (currentAngle2 <= 0) {
           direction = 1;
         }
+        
+        solidac.slowMode = !solidac.slowMode;
 
         currentAngle3 += increment3 * direction3;
         rotateButton3.style.transform = `rotate(${currentAngle3}deg)`;
@@ -1138,15 +1145,6 @@
     updateClock();
     setInterval(updateClock, 1000);
 
-    document.addEventListener('DOMContentLoaded', function () {
-      const powerSwitch = document.getElementById('power-switch');
-      const slider = powerSwitch.querySelector('.slider');
-
-      switchBottom.addEventListener('click', function () {
-        sliderBottom.style.top = sliderBottom.style.top === '1px' ? '13px' : '1px';
-      });
-    });
-
     document.getElementById('toggle').addEventListener('change', function () {
       var statusText = document.getElementById('statusText');
       if (this.checked) {
@@ -1192,6 +1190,79 @@
       function processFileContent(content) {
         solidac.setTape(new Tape(content));
       }
+    });
+
+    let running = false;
+    let incrCounter = false;
+    let lastExecution = Date.now();
+
+    document.addEventListener('DOMContentLoaded', function () {
+      setInterval(function () {
+        if (!running) {
+          return;
+        }
+        
+        const now = Date.now();
+        
+        if (solidac.slowMode && now - lastExecution < 500) {
+          return;
+        }
+
+        // Per the SOLIDAC manual, an instruction takes at least 0.25 msecs
+        // so we attempt to run 200 orders every 50 msecs in High Speed mode
+        const instCount = solidac.slowMode ? 1 : 200;
+
+        for (let i = 0; i < instCount; i++) {
+          if (incrCounter) {
+            solidac.counter.add(1);
+            incrCounter = false;
+          }
+          
+          console.log(solidac.counter.toNumber());
+
+          solidac.executeNextOrder();
+
+          if (!solidac.jumpInstruction) {
+            incrCounter = true;
+          }
+          
+          if (solidac.stopReason !== null) {
+            console.log(`Stopping due to ${solidac.stopReason.toString()}`);
+            running = false;
+            break;
+          }
+        }
+      }, Math.ceil(1000 / 20));
+
+      let lightIS = document.getElementById('light-IS');
+      let lightGO = document.getElementById('light-GO');
+
+      lightIS.addEventListener('click', function () {
+        if (running) {
+          alert("Initial set is impossible while SOLIDAC is running.");
+          return;
+        }
+
+        solidac.initialSet();
+      });
+
+      lightGO.addEventListener('click', function () {
+        if (running) {
+          return;
+        }
+
+        if (solidac.stopReason !== null) {
+          if (solidac.stopReason === solidac.stopReasons.absolute) {
+            alert("SOLIDAC is in absolute stop. Please use Initial Set before starting again.");
+            return;
+          } else if (solidac.stopReason !== solidac.stopReasons.normal) {
+            alert("SOLIDAC is stopped due to overflow. Please use Initial Set or Impermissible Override.");
+            return;
+          }
+        }
+        
+        running = true;
+      });
     });
   </script>
 
