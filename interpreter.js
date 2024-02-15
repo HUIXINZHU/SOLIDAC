@@ -49,6 +49,11 @@ class MachineWord {
   clear() {
     this.number = 0;
   }
+  
+  hasOverflowed() {
+    if (this.hasOverflowDigit) return !!(this.number >>> (this.size - 1));
+    else return false;
+  }
 
   limitSize() {
     let discardedDigits = 32 - this.size;
@@ -73,6 +78,15 @@ class MachineWord {
 
     if (signed) return interpretAsSigned(this.number, this.size - this.hasOverflowDigit);
     else return interpretAsUnsigned(this.number, this.size);
+  }
+
+  xor(other) {
+    this.limitSize();
+
+    if (Number.isInteger(other)) this.number ^= other;
+    else this.number ^= other.number;
+
+    this.limitSize();
   }
 }
 
@@ -288,14 +302,15 @@ class SOLIDAC {
       m: new MachineWord(21, false), //High half of double-length accumulator
       l: new MachineWord(19, false, false), //Low half of double-length accumulator
       d: new MachineWord(21), //The multiplier/quotient register      
-      s: new MachineWord(20, false), //The store-transfer register
+      s: new MachineWord(21), //The store-transfer register
       c: new MachineWord(21), //The control register
       v: new MachineWord(21), //The inspection register
     }
 
     this.currentReadingStore = this.constructor.initialOrderStore;
     this.mainStore = Array.from({length: 512}, () => new MachineWord(20, false));
-    
+
+    this.jumpInstruction = false;
     this.stopReason = null;
     this.overflowed = false;
     this.underflowed = false;
@@ -318,6 +333,7 @@ class SOLIDAC {
     this.registers.s.clear();
     this.registers.c.clear();
     this.registers.v.clear();
+    this.jumpInstruction = false;
     this.stopReason = null;
     this.overflowed = false;
     this.underflowed = false;
@@ -381,18 +397,30 @@ class SOLIDAC {
         this.writeStore(n, {number: tapeInput, size: 20});
         break;
       case 12:
-        if (this.registers.b[b].toNumber() > 0) this.counter.assign({number: n, size: 11});
+        if (this.registers.b[b].toNumber() > 0) {
+          this.counter.assign({number: n, size: 11});
+          this.jumpInstruction = true;
+        }
         break;
       case 13:
-        if (this.registers.b[b].toNumber() != 0) this.counter.assign({number: n, size: 11});
+        if (this.registers.b[b].toNumber() != 0) {
+          this.counter.assign({number: n, size: 11});
+          this.jumpInstruction = true;
+        }
         break;
       case 14:
         this.registers.b[b].subtract(1);
-        if (this.registers.b[b].toNumber() != 0) this.counter.assign({number: n, size: 11});
+        if (this.registers.b[b].toNumber() != 0) {
+          this.counter.assign({number: n, size: 11});
+          this.jumpInstruction = true;
+        }
         break;
       case 15:
         this.registers.b[b].subtract(2);
-        if (this.registers.b[b].toNumber() != 0) this.counter.assign({number: n, size: 11});
+        if (this.registers.b[b].toNumber() != 0) {
+          this.counter.assign({number: n, size: 11});
+          this.jumpInstruction = true;
+        }
         break;
       case 16:
         n = this.applyModifier(b, n);
@@ -411,31 +439,48 @@ class SOLIDAC {
         break;
       case 21:
         n = this.applyModifier(b, n);
-        if (this.getAccumulator() < 0) this.counter.assign({number: n, size: 11});
+        if (this.getAccumulator() < 0) {
+          this.counter.assign({number: n, size: 11});
+          this.jumpInstruction = true;
+        }
         break;
       case 22:
         n = this.applyModifier(b, n);
-        if (this.getAccumulator() > 0) this.counter.assign({number: n, size: 11});
+        if (this.getAccumulator() > 0) {
+          this.counter.assign({number: n, size: 11});
+          this.jumpInstruction = true;
+        }
         break;
       case 23:
         n = this.applyModifier(b, n);
-        if (this.getAccumulator() != 0) this.counter.assign({number: n, size: 11});
+        if (this.getAccumulator() != 0) {
+          this.counter.assign({number: n, size: 11});
+          this.jumpInstruction = true;
+        }
         break;
       case 24:
         n = this.applyModifier(b, n);
-        if (lastUnderflowed) this.counter.assign({number: n, size: 11});
+        if (lastUnderflowed) {
+          this.counter.assign({number: n, size: 11});
+          this.jumpInstruction = true;
+        }
         break;
       case 25:
         n = this.applyModifier(b, n);
-        if (lastOverflowed) this.counter.assign({number: n, size: 11});
+        if (lastOverflowed) {
+          this.counter.assign({number: n, size: 11});
+          this.jumpInstruction = true;
+        }
         break;
       case 26:
         n = this.applyModifier(b, n);
         this.counter.assign({number: n, size: 11});
+        this.jumpInstruction = true;
         break;
       case 27:
         n = this.applyModifier(b, n);
         this.counter.assign({number: n, size: 11});
+        this.jumpInstruction = true;
         if (Object.is(this.currentReadingStore, this.mainStore)) this.currentReadingStore = this.constructor.initialOrderStore;
         else this.currentReadingStore = this.mainStore;
         break;
@@ -505,6 +550,102 @@ class SOLIDAC {
         n = interpretAsSigned(n, 11);
         if (n >= 0) this.logicRightShiftAccumulator(n);
         else this.logicLeftShiftAccumulator(-n);
+        break;
+      case 40:
+        n = this.applyModifier(b, n);
+        this.writeStore(n, this.registers.m);
+        this.registers.m.clear();
+        this.registers.l.clear();
+        if (this.registers.s.hasOverflowed()) this.stopReason = this.constructor.stopReasons.irrecoverableOverflow;
+        break;
+      case 41:
+        n = this.applyModifier(b, n);
+        this.writeStore(n, this.registers.m);
+        if (this.registers.s.hasOverflowed()) this.stopReason = this.constructor.stopReasons.irrecoverableOverflow;
+        break;
+      case 42:
+        n = this.applyModifier(b, n);
+        this.registers.m.clear();
+        this.registers.m.assign(this.readStore(n));
+        break;
+      case 43:
+        n = this.applyModifier(b, n);
+        this.registers.m.add(this.readStore(n));
+        break;
+      case 44:
+        n = this.applyModifier(b, n);
+        this.registers.m.subtract(this.readStore(n));
+        break;
+      case 45:
+        n = this.applyModifier(b, n);
+        var s = this.currentReadingStore[n];
+        this.registers.s.assign(this.registers.m);
+        if (this.registers.s.hasOverflowed()) this.stopReason = this.constructor.stopReasons.irrecoverableOverflow;
+        this.registers.s.add(s);
+        if (this.registers.s.hasOverflowed()) this.stopReason = this.constructor.stopReasons.irrecoverableOverflow;
+        this.writeStore(n, this.registers.s);
+        break;
+      case 46:
+        n = this.applyModifier(b, n);
+        var s = this.currentReadingStore[n];
+        this.registers.clear();
+        this.registers.s.subtract(this.registers.m);
+        if (this.registers.s.hasOverflowed()) this.stopReason = this.constructor.stopReasons.irrecoverableOverflow;
+        this.registers.s.add(s);
+        if (this.registers.s.hasOverflowed()) this.stopReason = this.constructor.stopReasons.irrecoverableOverflow;
+        this.writeStore(n, this.registers.s);
+        break;
+      case 47:
+        n = this.applyModifier(b, n);
+        this.registers.m.xor(this.readStore(n));
+        break;
+      case 48:
+        n = this.applyModifier(b, n);
+        this.registers.m.and(this.readStore(n));
+        break;
+      case 49:
+        n = this.applyModifier(b, n);
+        this.writeStore(n, this.registers.m, 'swap');
+        if (this.registers.s.hasOverflowed()) this.stopReason = this.constructor.stopReasons.irrecoverableOverflow;
+        break;
+      case 51:
+        n = this.applyModifier(b, n);
+        this.writeStore(n, this.registers.d);
+        if (this.registers.s.hasOverflowed()) this.stopReason = this.constructor.stopReasons.irrecoverableOverflow;
+        break;
+      case 52:
+        n = this.applyModifier(b, n);
+        this.registers.d.clear();
+        this.registers.d.assign(this.readStore(n));
+        break;
+      case 53:
+        n = this.applyModifier(b, n);
+        this.registers.d.add(this.readStore(n));
+        break;
+      case 54:
+        n = this.applyModifier(b, n);
+        this.registers.d.subtract(this.readStore(n));
+        break;
+      case 55:
+        n = this.applyModifier(b, n);
+        this.registers.d.clear();
+        this.registers.d.assign({number: n, size: 11});
+        break;
+      case 56:
+        // TODO multiplication
+        break;
+      case 58:
+        // TODO division
+        break;
+      case 59:
+        this.registers.m.swap(this.registers.d);
+        break;
+      case 60:
+        this.registers.v.clear();
+        this.registers.v.assign(this.readStore(n));
+        break;
+      case 61:
+        // TODO bind hand switches
         break;
       default:
         this.stopReason = this.constructor.stopReasons.absolute;
@@ -638,11 +779,13 @@ class SOLIDAC {
   }
   
   applyModifier(b, n) {
-    if (b != 0) return (this.registers.b[b].number + order.n) & 0b11111111111;
+    if (b != 0) return (this.registers.b[b].number + n) & 0b11111111111;
     return n;
   }
 
   executeNextOrder() {
+    this.jumpInstruction = false;
+
     let orderLocation = this.counter.toNumber();
 
     if (orderLocation >= this.currentReadingStore.length) {
@@ -651,24 +794,33 @@ class SOLIDAC {
       return;
     }
     
-    let s = this.readStore(orderLocation);
+    this.registers.c.assign(this.readStore(orderLocation));
 
-    let f = (s.number >>> 14) & 0b111111;
-    let b = (s.number >>> 11) & 0b111;
-    let n = s.number & 0b11111111111;
+    let f = (this.registers.c.number >>> 14) & 0b111111;
+    let b = (this.registers.c.number >>> 11) & 0b111;
+    let n = this.registers.c.number & 0b11111111111;
 
     this.executeOrder(new Order(f, b, n));
   }
 
-  readStore(n){
-    let v = this.currentReadingStore[n];
+  readStore(n) {
+    let v;
+    
+    if (Object.is(this.currentReadingStore, this.constructor.initialOrderStore) && this.currentReadingStore.length <= n) {
+      v = this.mainStore[n];
+    } else {
+      v = this.currentReadingStore[n];
+    }
+
+    this.registers.s.clear();
     this.registers.s.assign(v);
     return v;
   }
 
-  writeStore(n, v, op = 'assign'){
-    this.registers.s.assign(v);
-    this.mainStore[n][op](v);
+  writeStore(n, v, op = 'assign') {
+    this.registers.s.clear();
+    this.registers.s[op](v);
+    this.mainStore[n].assign(this.registers.s);
   }
 
   setsHooks(postOrder, output, stopped) {
