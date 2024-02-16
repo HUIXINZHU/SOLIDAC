@@ -450,7 +450,11 @@
       margin-left: -2px;
       font-size: 10px;
       font-weight: bold;
+    }
 
+    .annotation span {
+      transform: rotate(90deg);
+      display: inline-block;
     }
 
     .annotation:nth-child(1) {
@@ -460,6 +464,7 @@
     .annotation:nth-child(2) {
       transform: rotate(-64.3deg) translate(75px);
     }
+    
 
     .annotation:nth-child(3) {
       transform: rotate(-38.6deg) translate(75px);
@@ -502,6 +507,49 @@
 
     }
 
+    .annotation2 {
+      position: flex;
+      transform-origin: 5px;
+      margin-top: -13px;
+      margin-left: -20px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .annotation2 span {
+      transform: rotate(95deg);
+      display: inline-block;
+    }
+
+
+    .annotation2:nth-child(1) {
+      transform: rotate(-56deg) translate(235px);
+    }
+
+    .annotation2:nth-child(2) {
+      transform: rotate(-56deg) translate(240px);
+    }
+    
+
+    .annotation2:nth-child(3) {
+      transform: rotate(-38.6deg) translate(75px);
+    }
+
+    .annotation2:nth-child(4) {
+      transform: rotate(-12.9deg) translate(75px);
+    }
+
+    .annotation2:nth-child(5) {
+      transform: rotate(12.8deg) translate(75px);
+    }
+
+    .annotation2:nth-child(6) {
+      transform: rotate(38.5deg) translate(75px);
+    }
+
+
+  
+
     .rotate-button2 {
       width: 30px;
       height: 30px;
@@ -521,6 +569,33 @@
       background-color: white;
       border: 1px solid #000000;
     }
+
+
+    .annotation3 {
+      position: flex;
+      transform-origin: 5px;
+      margin-top: -13px;
+      margin-left: -20px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .annotation3 span {
+      transform: rotate(-100deg);
+      
+      
+      display: inline-block;
+    }
+
+
+    .annotation3:nth-child(1) {
+      transform: rotate(98deg) translate(-443px);
+    }
+
+    .annotation3:nth-child(2) {
+      transform: rotate(102.8deg) translate(-457.5px);
+    }
+    
 
     .outer-circle3 {
       width: 40px;
@@ -792,24 +867,69 @@
 
       <div class="button-container">
         <div class="annotation">
-          <div class="annotation">B1</div>
-          <div class="annotation">B2</div>
-          <div class="annotation">B3</div>
-          <div class="annotation">B4</div>
-          <div class="annotation">B5</div>
-          <div class="annotation">B6</div>
-          <div class="annotation">B7</div>
+          <div class="annotation" style="transform: rotate(-90deg) translate(75px);">
+            <span>B1</span>
+          </div>
+          <div class="annotation" style="transform: rotate(-64.3deg) translate(75px);">
+            <span>B2</span>
+          </div>
+          <div class="annotation" style="transform: rotate(-38.6deg) translate(75px);">
+            <span>B3</span>
+          </div>
+          <div class="annotation" style="transform: rotate(-12.9deg) translate(75px);">
+            <span>B4</span>
+          </div>
+          <div class="annotation" style="transform: rotate(12.8deg) translate(75px);">
+            <span>B5</span>
+          </div>
+          <div class="annotation" style="transform: rotate(38.5deg) translate(75px);">
+            <span>B6</span>
+          </div>
+          <div class="annotation" style="transform: rotate(64.2deg) translate(75px);">
+            <span>B7</span>
+          </div>
           <div class="annotation">C</div>
         </div>
+
         <div class="outer-circle">
           <div id="rotate-button" class="rotate-button">
             <div class="rectangle"></div>
           </div>
         </div>
 
+        <div class="annotation2">
+          <div class="annotation2" style="transform: rotate(-56deg) translate(220px);">
+            <span>M</span>
+          </div>
+          <div class="annotation2" style="transform: rotate(-54deg) translate(240px);">
+            <span>L</span>
+          </div>
+          <div class="annotation2" style="transform: rotate(-50deg) translate(249px);">
+            <span>D</span>
+          </div>
+          <div class="annotation2" style="transform: rotate(-46deg) translate(250px);">
+            <span>S</span>
+          </div>
+          <div class="annotation2" style="transform: rotate(-42deg) translate(240px);">
+            <span>C</span>
+          </div>
+          <div class="annotation2" style="transform: rotate(-40deg) translate(220px);">
+            <span>V</span>
+          </div>
+        </div>
+
         <div class="outer-circle2">
           <div id="rotate-button2" class="rotate-button2">
             <div class="rectangle2"></div>
+          </div>
+        </div>
+
+        <div class="annotation3">
+          <div class="annotation3" style="transform: rotate(98deg) translate(-443px);">
+            <span>HS</span>
+          </div>
+          <div class="annotation3" style="transform: rotate(102.8deg) translate(-457.5px);">
+            <span>NORM</span>
           </div>
         </div>
 
@@ -1024,17 +1144,17 @@
 
       const rotateButton3 = document.getElementById('rotate-button3');
       let currentAngle3 = 0;
-      let increment3 = 90;
+      let increment3 = 60;
       let direction3 = 1;
 
 
       rotateButton3.addEventListener('click', function () {
-        if (currentAngle3 >= 90) {
+        if (currentAngle3 >= 180) {
           direction3 = -1;
-        } else if (currentAngle2 <= 0) {
-          direction = 1;
+        } else if (currentAngle3 <= 0) {
+          direction3 = 1;
         }
-        
+      
         solidac.slowMode = !solidac.slowMode;
 
         currentAngle3 += increment3 * direction3;
