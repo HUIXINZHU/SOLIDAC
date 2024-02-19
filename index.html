@@ -1009,9 +1009,7 @@
       updateCregisterLights();
     },
     console.log,
-    function () {
-      console.log('stopped');
-    });
+    function () {});
 
     document.addEventListener('DOMContentLoaded', function () {
       const lightsContainer = document.querySelector('.lights');
@@ -1324,7 +1322,7 @@
         
         const now = Date.now();
         
-        if (solidac.slowMode && now - lastExecution < 500) {
+        if (solidac.slowMode && now - lastExecution < 1000) {
           return;
         }
 
@@ -1337,8 +1335,6 @@
             solidac.counter.add(1);
             incrCounter = false;
           }
-          
-          console.log(solidac.counter.toNumber());
 
           solidac.executeNextOrder();
 
@@ -1370,6 +1366,9 @@
         if (running) {
           return;
         }
+        
+        solidac.audioContext.suspend();
+        solidac.audioContext.resume();
 
         if (solidac.stopReason !== null) {
           if (solidac.stopReason === solidac.stopReasons.absolute) {
