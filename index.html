@@ -343,6 +343,13 @@
       border: 1px solid #000000;
       margin-bottom: 25px;
     }
+    .green-background {
+      background-color: rgb(80, 167, 80) !important; 
+    }
+
+    .operation-light, .green-background { 
+      cursor: pointer;
+    }
 
     .comment {
       height: 0px;
@@ -1062,6 +1069,13 @@
       light.className = 'operation-light';
       light.id = 'light-' + comments[i];
       lightsContainer.appendChild(light);
+
+      if (i < 3) {
+        light.classList.add('green-background');
+        light.addEventListener('click', function() {
+        console.log('Clicked on light:', light.id);
+        });
+      }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
