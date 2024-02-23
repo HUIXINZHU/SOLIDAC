@@ -1311,6 +1311,7 @@
     });
 
     let running = false;
+    let singleShot = false;
     let incrCounter = false;
     let lastExecution = Date.now();
 
@@ -1328,7 +1329,7 @@
 
         // Per the SOLIDAC manual, an instruction takes at least 0.25 msecs
         // so we attempt to run 200 orders every 50 msecs in High Speed mode
-        const instCount = solidac.slowMode ? 1 : 200;
+        const instCount = (singleShot || solidac.slowMode) ? 1 : 200;
 
         for (let i = 0; i < instCount; i++) {
           if (incrCounter) {
@@ -1348,10 +1349,18 @@
             break;
           }
         }
+
+        if (singleShot) {
+          running = false;
+          singleShot = false;
+        }
+
       }, Math.ceil(1000 / 20));
 
       let lightIS = document.getElementById('light-IS');
       let lightGO = document.getElementById('light-GO');
+      let lightSS = document.getElementById('light-SS');
+      let lightOR = document.getElementById('light-OR');
 
       lightIS.addEventListener('click', function () {
         if (running) {
@@ -1379,8 +1388,41 @@
             return;
           }
         }
-        
+
+        singleShot = false;
         running = true;
+      });
+      
+      lightSS.addEventListener('click', function () {
+        if (running) {
+          return;
+        }
+
+        solidac.audioContext.suspend();
+        solidac.audioContext.resume();
+
+        if (solidac.stopReason !== null) {
+          if (solidac.stopReason === solidac.constructor.stopReasons.absolute) {
+            alert("SOLIDAC is in absolute stop. Please use Initial Set before starting again.");
+            return;
+          } else if (solidac.stopReason !== solidac.constructor.stopReasons.normal) {
+            alert("SOLIDAC is stopped due to overflow. Please use Initial Set or Impermissible Override.");
+            return;
+          }
+        }
+
+        singleShot = true;
+        running = true;
+      });
+
+      lightOR.addEventListener('click', function () {
+        if (solidac.stopReason === solidac.constructor.stopReasons.overshiftAfterNormalising ||
+            solidac.stopReason === solidac.constructor.stopReasons.recoverableOverflow ||
+            solidac.stopReason === solidac.constructor.stopReasons.irrecoverableOverflow) {
+          solidac.stopReason = null;
+        } else {
+          alert("SOLIDAC is not in an impermissible order. Nothing to override.");
+        }
       });
     });
   </script>
