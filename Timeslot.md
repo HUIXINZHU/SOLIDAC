@@ -60,7 +60,7 @@
 - Labeling of components like buttons and knobs. 
 ### 11/27
 - Reading the paper try to figure out the initial order.
-### 12/015
+### 12/15
 - Implementing visual feedback for register changes and machine operations, such as dynamic indicator lights and animations, to visually represent machine states. 
 ### 12/11
 - Reading the paper try to figure out the initial order.
