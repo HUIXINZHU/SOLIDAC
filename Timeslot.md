@@ -33,15 +33,52 @@
 ### 10\15
 - Starting rewrite the implementation code(2 hours)
 ### 10\16
-<<<<<<< HEAD
 - Keep on implementing order code (1.5 hour)
-<<<<<<< HEAD
-=======
-
-=======
-- Keep on implementing order code (1.5 hours)
 ### 10\17
 - Finised implementing order code (2 hours)
->>>>>>> 0112df44e8bc8c6491fbdb124aeca1c9fc346632
-
->>>>>>> 8a6536e119c10819bf28f76a737c69ae92d1fb53
+### 10\18
+- Initiated the CSS design process, focusing on constructing the basic framework to resemble the original SOLIDAC design. This involved creating a layout with four frames to form the basic template of SOLIDAC. 
+### 10/19
+- Designed a rectangular frame to include three panels, positioned using Flexbox to gradually populate the components within. Initially, a graphic clock was placed on the leftmost panel, serving no practical purpose. 
+### 10/20
+- Updated the graphic clock to a functional real-time clock after exploring CSS methods. Began the design of the middle panel but faced challenges due to the absence of clear images, resorting to designing based on older pictures. 
+### 10/21
+- Implemented the first set of 21 sliding components in the middle panel, hypothesizing their potential linkage with a row of indicator lights based on older images. 
+### 10/22
+- Created three rows of indicator lights, with the functionality that pressing a button in the sliding components beneath the middle row of lights would illuminate the corresponding light above. 
+### 10/23
+- After a consultation with the supervisor, received detailed design diagrams and the initial code files, prompting a revision of the previous designs according to the new information. This involved disconnecting the button-light linkages and removing listener functionalities.
+### 10/24
+- Modified the design of the last row of bulbs to transform them into buttons as per the new design diagrams.
+### 11/3
+- Foucus on the design of wireframe, alomost finished all the design.
+### 11/9
+- start the implementation of arithmetic operations, including addition, subtraction, and shifts, ensuring they handle edge cases correctly, especially around overflows and underflows. 
+### 11/20
+- Finished the implementation of arithemetic operation.
+### 11/25
+- Labeling of components like buttons and knobs. 
+### 11/27
+- Reading the paper try to figure out the initial order.
+### 12/015
+- Implementing visual feedback for register changes and machine operations, such as dynamic indicator lights and animations, to visually represent machine states. 
+### 12/11
+- Reading the paper try to figure out the initial order.
+### 12/18
+- Try to rewrite the instruction code based on the initial order.
+### 01/08
+- The instruction is still not functioning, need to read the paper again.
+### 01/15
+- Connect the rotary switches with the indicator lights
+### 01/22
+- The first instruction order is worked! but still need more improvement
+### 01/29
+- Trying to figure out which part of the machine is used to store the note , didnt mentioned a lot in paper.
+### 02/06
+- Working on web API, try to store the node in register and use a loop to call the function, thinking about how to control the frequency of the node.
+### 02/10
+- Successfully output the audio!!!!
+### 02/15
+- Writing the main.js as unit tests.
+### 02/18
+- Finished all the related implementation, basically stop coding, and starting writing dissertation
