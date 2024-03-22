@@ -1,2 +1,2 @@
 # SOLIDAC
-An auld Scottish Computer
+SOLIDAC is a small electronic computer built by the University of Glasgow starting in 1958 and completed in 1963, specifically for educational use. Its goal was to help students get a better grasp of computer architecture and the relationship between registers and instructions. Not only could this machine be used for programming in machine language, but it also had the cool feature of being able to create music  input paper tapes.
